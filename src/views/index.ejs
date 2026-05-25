@@ -8,41 +8,50 @@
   <link rel="stylesheet" href="/css/output.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 </head>
-<body class="bg-gray-50 font-sans">
+<body class="bg-gray-50 font-sans tracking-wide antialiased">
 
   <!-- Navbar -->
-  <nav class="bg-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4">
-      <div class="flex justify-between items-center">
-        <a href="/" class="flex items-center gap-3">
-          <img src="/images/logo.png" alt="ANSADEIS" class="h-12 w-auto">
-        </a>
-
-        <div class="hidden md:flex items-center space-x-8 text-lg">
-          <a href="/" class="hover:text-rose-600 transition-colors">Home</a>
-          <a href="/rooms" class="hover:text-rose-600 transition-colors">Rooms & Suites</a>
-          <a href="/about" class="hover:text-rose-600 transition-colors">About Us</a>
-          <a href="/contact" class="hover:text-rose-600 transition-colors">Contact</a>
+  <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
+    <div class="max-w-[90rem] mx-auto px-6 py-4">
+      <!-- Grid layout guarantees true centering for links regardless of element sizing -->
+      <div class="grid grid-cols-2 md:grid-cols-3 items-center">
+        
+        <!-- Left Section: Logo pushed far left -->
+        <div class="flex justify-start">
+          <a href="/" class="flex items-center">
+            <img src="/images/logo.png" alt="ANSADEIS" class="h-10 md:h-12 w-auto object-contain">
+          </a>
         </div>
 
-        <a href="<%= airbnbUrl %>" target="_blank" 
-           class="hidden md:block bg-rose-600 hover:bg-rose-700 text-white px-8 py-3 rounded-full font-medium transition-all">
-          Book on Airbnb →
-        </a>
+        <!-- Middle Section: Centered Nav Links -->
+        <div class="hidden md:flex justify-center space-x-10 text-base font-medium text-gray-700 tracking-wider uppercase">
+          <a href="/" class="text-rose-600 transition-colors border-b-2 border-rose-600 pb-1">Home</a>
+          <a href="/rooms" class="hover:text-rose-600 transition-colors pb-1 border-b-2 border-transparent hover:border-rose-600">Rooms & Suites</a>
+          <a href="/about" class="hover:text-rose-600 transition-colors pb-1 border-b-2 border-transparent hover:border-rose-600">About Us</a>
+          <a href="/contact" class="hover:text-rose-600 transition-colors pb-1 border-b-2 border-transparent hover:border-rose-600">Contact</a>
+        </div>
 
-        <button id="mobile-menu-button" class="md:hidden text-3xl text-gray-700">
-          <i class="fa-solid fa-bars"></i>
-        </button>
+        <!-- Right Section: Button pushed far right -->
+        <div class="flex justify-end items-center gap-4">
+          <a href="<%= airbnbUrl %>" target="_blank" 
+             class="hidden md:inline-flex bg-rose-600 hover:bg-rose-700 text-white px-7 py-2.5 rounded-full text-sm font-semibold tracking-wide uppercase transition-all shadow-sm hover:shadow-rose-200 hover:-translate-y-0.5 transform duration-200">
+            Book on Airbnb →
+          </a>
+
+          <button id="mobile-menu-button" class="md:hidden text-2xl text-gray-800 p-1 focus:outline-none">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
       </div>
 
       <!-- Mobile Menu -->
-      <div id="mobile-menu" class="hidden md:hidden mt-4 py-4 border-t">
-        <div class="flex flex-col space-y-4 text-lg">
-          <a href="/" class="hover:text-rose-600">Home</a>
-          <a href="/rooms" class="hover:text-rose-600">Rooms & Suites</a>
-          <a href="/about" class="hover:text-rose-600">About Us</a>
-          <a href="/contact" class="hover:text-rose-600">Contact</a>
-          <a href="<%= airbnbUrl %>" target="_blank" class="mt-6 bg-rose-600 text-white py-4 rounded-2xl text-center">
+      <div id="mobile-menu" class="hidden md:hidden mt-4 py-4 border-t border-gray-100">
+        <div class="flex flex-col space-y-4 text-center font-medium tracking-wider uppercase">
+          <a href="/" class="text-rose-600 py-2">Home</a>
+          <a href="/rooms" class="text-gray-700 hover:text-rose-600 py-2">Rooms & Suites</a>
+          <a href="/about" class="text-gray-700 hover:text-rose-600 py-2">About Us</a>
+          <a href="/contact" class="text-gray-700 hover:text-rose-600 py-2">Contact</a>
+          <a href="<%= airbnbUrl %>" target="_blank" class="mt-4 bg-rose-600 text-white py-3.5 rounded-xl block text-sm font-bold shadow-md">
             Book on Airbnb →
           </a>
         </div>
@@ -51,56 +60,90 @@
   </nav>
 
   <!-- Hero Section -->
-  <section class="relative h-screen flex items-center justify-center text-center text-white overflow-hidden">
-    <img src="/images/reserve_sq.png" class="absolute inset-0 w-full h-full object-cover" alt="ANSADEIS">
-    <div class="absolute inset-0 bg-black/50"></div>
+  <section class="relative h-[90vh] flex items-center justify-center text-center text-white overflow-hidden">
+    <!-- Fixed extension from .png to .jpg to resolve the blank background -->
+    <img src="/images/reserve_sq.jpg" class="absolute inset-0 w-full h-full object-cover scale-105 animate-fade-in" alt="ANSADEIS Cover">
+    <div class="absolute inset-0 bg-black/40 backdrop-blur-[1px]"></div>
     
-    <div class="relative z-10 px-6 max-w-4xl mx-auto">
-      <h1 class="mb-6">
-        <img src="/images/logo.png" alt="ANSADEIS" class="h-20 md:h-24 mx-auto">
-      </h1>
-      <p class="text-xl md:text-2xl mb-10">Experience luxury and comfort in Lingayen!</p>
+    <div class="relative z-10 px-6 max-w-4xl mx-auto space-y-8">
+      <div class="animate-slide-up">
+        <img src="/images/logo.png" alt="ANSADEIS" class="h-24 md:h-28 mx-auto brightness-0 invert filter drop-shadow-md">
+      </div>
       
-      <a href="<%= airbnbUrl %>" target="_blank"
-         class="inline-block bg-white text-black hover:bg-rose-600 hover:text-white text-xl font-semibold px-12 py-5 rounded-2xl transition-all">
-        Reserve Your Stay on Airbnb
-      </a>
+      <p class="text-xl md:text-3xl font-light tracking-wide max-w-2xl mx-auto drop-shadow-md text-gray-100">
+        Experience luxury and comfort in <span class="font-semibold text-white">Lingayen</span>!
+      </p>
+      
+      <div class="pt-4">
+        <a href="<%= airbnbUrl %>" target="_blank"
+           class="inline-flex items-center bg-white text-gray-900 hover:bg-rose-600 hover:text-white text-lg font-bold px-10 py-4.5 rounded-full transition-all shadow-xl hover:shadow-rose-900/30 hover:-translate-y-1 transform duration-300 group">
+          <span>Reserve Your Stay on Airbnb</span>
+          <i class="fa-solid fa-arrow-right ml-3 text-sm transition-transform group-hover:translate-x-1"></i>
+        </a>
+      </div>
     </div>
   </section>
 
   <!-- Amenities Section -->
-  <section class="py-20 bg-white">
+  <section class="py-24 bg-white">
     <div class="max-w-7xl mx-auto px-6">
-      <h2 class="text-4xl font-bold text-center mb-12">Our Amenities</h2>
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-        <div class="text-center">
-          <i class="fa-solid fa-wifi text-4xl text-rose-600 mb-4"></i>
-          <h3 class="font-semibold">Free WiFi</h3>
+      <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+        <span class="text-rose-600 uppercase tracking-widest font-semibold text-sm">World-Class Comfort</span>
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">Our Premium Amenities</h2>
+        <div class="h-1 w-12 bg-rose-600 mx-auto rounded-full"></div>
+      </div>
+      
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 lg:gap-12">
+        <div class="bg-gray-50/50 p-8 rounded-2xl text-center border border-gray-100 hover:shadow-md transition duration-300">
+          <div class="w-16 h-16 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-5 text-2xl">
+            <i class="fa-solid fa-wifi"></i>
+          </div>
+          <h3 class="font-bold text-gray-800 text-lg">Free High-Speed WiFi</h3>
         </div>
-        <div class="text-center">
-          <i class="fa-solid fa-car text-4xl text-rose-600 mb-4"></i>
-          <h3 class="font-semibold">Free Parking</h3>
+        <div class="bg-gray-50/50 p-8 rounded-2xl text-center border border-gray-100 hover:shadow-md transition duration-300">
+          <div class="w-16 h-16 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-5 text-2xl">
+            <i class="fa-solid fa-car"></i>
+          </div>
+          <h3 class="font-bold text-gray-800 text-lg">Free Private Parking</h3>
         </div>
-        <div class="text-center">
-          <i class="fa-solid fa-swimmer text-4xl text-rose-600 mb-4"></i>
-          <h3 class="font-semibold">Swimming Pool</h3>
+        <div class="bg-gray-50/50 p-8 rounded-2xl text-center border border-gray-100 hover:shadow-md transition duration-300">
+          <div class="w-16 h-16 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-5 text-2xl">
+            <i class="fa-solid fa-dumbbell"></i>
+          </div>
+          <h3 class="font-bold text-gray-800 text-lg">Gym Access</h3>
         </div>
-        <div class="text-center">
-          <i class="fa-solid fa-utensils text-4xl text-rose-600 mb-4"></i>
-          <h3 class="font-semibold">Restaurant</h3>
+        <div class="bg-gray-50/50 p-8 rounded-2xl text-center border border-gray-100 hover:shadow-md transition duration-300">
+          <div class="w-16 h-16 bg-rose-50 text-rose-600 rounded-full flex items-center justify-center mx-auto mb-5 text-2xl">
+            <i class="fa-solid fa-spa"></i>
+          </div>
+          <h3 class="font-bold text-gray-800 text-lg">Spa & Relaxation</h3>
         </div>
       </div>
     </div>
   </section>
 
   <!-- Gallery Section -->
-  <section class="py-20 bg-gray-100">
+  <section class="py-24 bg-gray-50 border-t border-b border-gray-100">
     <div class="max-w-7xl mx-auto px-6">
-      <h2 class="text-4xl font-bold text-center mb-12">Gallery</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <img src="https://source.unsplash.com/random/600x400/?hotelroom" class="rounded-2xl shadow-md hover:scale-105 transition" alt="Room">
-        <img src="https://source.unsplash.com/random/600x400/?hotelpool" class="rounded-2xl shadow-md hover:scale-105 transition" alt="Pool">
-        <img src="https://source.unsplash.com/random/600x400/?hoteldining" class="rounded-2xl shadow-md hover:scale-105 transition" alt="Restaurant">
+      <div class="text-center max-w-2xl mx-auto mb-16 space-y-3">
+        <span class="text-rose-600 uppercase tracking-widest font-semibold text-sm">Visual Journey</span>
+        <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">Explore the Estate</h2>
+        <div class="h-1 w-12 bg-rose-600 mx-auto rounded-full"></div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="overflow-hidden rounded-2xl shadow-sm bg-white border border-gray-100 group">
+          <img src="https://unsplash.com" class="w-full h-64 object-cover group-hover:scale-105 transition duration-500" alt="Luxury Room">
+          <div class="p-5"><p class="font-semibold text-gray-800 tracking-wide uppercase text-sm">Luxury Suites</p></div>
+        </div>
+        <div class="overflow-hidden rounded-2xl shadow-sm bg-white border border-gray-100 group">
+          <img src="https://unsplash.com" class="w-full h-64 object-cover group-hover:scale-105 transition duration-500" alt="Gym">
+          <div class="p-5"><p class="font-semibold text-gray-800 tracking-wide uppercase text-sm">Gym & Wellness</p></div>
+        </div>
+        <div class="overflow-hidden rounded-2xl shadow-sm bg-white border border-gray-100 group">
+          <img src="https://unsplash.com" class="w-full h-64 object-cover group-hover:scale-105 transition duration-500" alt="Spa Area">
+          <div class="p-5"><p class="font-semibold text-gray-800 tracking-wide uppercase text-sm">Spa & Relaxation</p></div>
+        </div>
       </div>
     </div>
   </section>

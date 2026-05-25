@@ -14,4 +14,17 @@ router.get('/rooms', (req, res) => {
   });
 });
 
+router.get('/about', (req, res) => {
+  res.render('about', {
+    airbnbUrl: "https://www.airbnb.com/rooms/your-listing-id"
+  });
+});
+
+router.get('/contact', (req, res) => {
+  res.render('contact', {
+    airbnbUrl: "https://www.airbnb.com/rooms/your-listing-id"
+  });
+});
+
+
 export default router;
