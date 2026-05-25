@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ANSADEIS - Luxury Hotel</title>
+  
+  <link rel="stylesheet" href="/css/output.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+      
+      <!-- Logo -->
+      <a href="/" class="flex items-center gap-3">
+        <img src="/images/logo.png" 
+             alt="ANSADEIS" 
+             class="h-12 w-auto">
+        <!-- Optional: Text beside logo -->
+      </a>
+
+      <!-- Menu -->
+      <div class="hidden md:flex items-center space-x-8 text-lg">
+        <a href="/"class="hover:text-rose-600 transition-colors">Home</a>
+        <a href="/rooms" class="hover:text-rose-600 transition-colors">Rooms & Suites</a>
+        <a href="/about" class="hover:text-rose-600 transition-colors">About Us</a>
+        <a href="/contact" class="hover:text-rose-600 transition-colors">Contact</a>
+      </div>
+
+      <!-- Book Button -->
+      <a href="<%= airbnbUrl %>" target="_blank" 
+         class="bg-rose-600 hover:bg-rose-700 text-white px-8 py-3 rounded-full font-medium transition-all">
+        Book on Airbnb →
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="relative h-screen flex items-center justify-center text-center text-white overflow-hidden">
+    <img src="/images/reserve_sq.png"
+         class="absolute inset-0 w-full h-full object-cover" alt="Hotel">
+    <div class="absolute inset-0 bg-black/50"></div>
+    
+    <div class="relative z-10 px-6 max-w-4xl mx-auto">
+      <h1>
+        <img src="/images/logo.png" alt="ANSADEIS" class="h-16 inline-block mb-2">
+      </h1>
+      <p class="text-xl md:text-2xl mb-10">Experience luxury and comfort in Lingayen!</p>
+      
+      <a href="<%= airbnbUrl %>" target="_blank"
+         class="inline-block bg-white text-black hover:bg-rose-600 hover:text-white text-xl font-semibold px-12 py-5 rounded-2xl transition-all">
+        Reserve Your Stay on Airbnb
+      </a>
+    </div>
+  </section>
+
+</body>
+</html>
