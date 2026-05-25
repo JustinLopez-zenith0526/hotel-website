@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us - ANSADEIS</title>
+  
+  <link rel="stylesheet" href="/css/output.css">
+  <link rel="stylesheet" href="https://cloudflare.com">
+</head>
+<body class="bg-gray-50 font-sans tracking-wide antialiased">
+
+  <!-- Navbar (Matched perfectly with Home & Rooms Sections) -->
+  <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
+    <div class="max-w-[90rem] mx-auto px-6 py-4">
+      <div class="grid grid-cols-2 md:grid-cols-3 items-center">
+        
+        <!-- Left Section: Logo -->
+        <div class="flex justify-start">
+          <a href="/" class="flex items-center">
+            <img src="/images/logo.png" alt="ANSADEIS" class="h-10 md:h-12 w-auto object-contain">
+          </a>
+        </div>
+
+        <!-- Middle Section: Centered Nav Links -->
+        <div class="hidden md:flex justify-center space-x-10 text-base font-medium text-gray-700 tracking-wider uppercase">
+          <a href="/" class="hover:text-rose-600 transition-colors pb-1 border-b-2 border-transparent hover:border-rose-600">Home</a>
+          <a href="/rooms" class="hover:text-rose-600 transition-colors pb-1 border-b-2 border-transparent hover:border-rose-600">Rooms & Suites</a>
+          <a href="/about" class="text-rose-600 transition-colors border-b-2 border-rose-600 pb-1">About Us</a>
+          <a href="/contact" class="hover:text-rose-600 transition-colors pb-1 border-b-2 border-transparent hover:border-rose-600">Contact</a>
+        </div>
+
+        <!-- Right Section: Button -->
+        <div class="flex justify-end items-center gap-4">
+          <a href="<%= airbnbUrl %>" target="_blank" 
+             class="hidden md:inline-flex bg-rose-600 hover:bg-rose-700 text-white px-7 py-2.5 rounded-full text-sm font-semibold tracking-wide uppercase transition-all shadow-sm hover:shadow-rose-200 hover:-translate-y-0.5 transform duration-200">
+            Book on Airbnb →
+          </a>
+
+          <button id="mobile-menu-button" class="md:hidden text-2xl text-gray-800 p-1 focus:outline-none">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="hidden md:hidden mt-4 py-4 border-t border-gray-100">
+        <div class="flex flex-col space-y-4 text-center font-medium tracking-wider uppercase">
+          <a href="/" class="text-gray-700 hover:text-rose-600 py-2">Home</a>
+          <a href="/rooms" class="text-gray-700 hover:text-rose-600 py-2">Rooms & Suites</a>
+          <a href="/about" class="text-rose-600 py-2">About Us</a>
+          <a href="/contact" class="text-gray-700 hover:text-rose-600 py-2">Contact</a>
+          <a href="<%= airbnbUrl %>" target="_blank" class="mt-4 bg-rose-600 text-white py-3.5 rounded-xl block text-sm font-bold shadow-md">
+            Book on Airbnb →
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Header Banner -->
+  <header class="py-16 bg-white border-b border-gray-100">
+    <div class="max-w-7xl mx-auto px-6 text-center space-y-3">
+      <span class="text-rose-600 uppercase tracking-widest font-semibold text-sm">Our Story</span>
+      <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-gray-900">About ANSADEIS</h1>
+      <div class="h-1 w-12 bg-rose-600 mx-auto rounded-full"></div>
+    </div>
+  </header>
+
+  <!-- Story Section -->
+  <main class="max-w-7xl mx-auto px-6 py-20">
+    <div class="grid lg:grid-cols-2 gap-16 items-center">
+      
+      <!-- Left: Visual Side (Stacked Images) -->
+      <div class="grid grid-cols-2 gap-4 relative">
+        <div class="space-y-4">
+          <img src="https://unsplash.com" 
+               class="rounded-3xl shadow-md w-full h-64 object-cover" alt="Hotel Exterior">
+          <img src="https://unsplash.com" 
+               class="rounded-3xl shadow-md w-full h-48 object-cover" alt="Lobby Lounge">
+        </div>
+        <div class="space-y-4 pt-12">
+          <img src="https://unsplash.com" 
+               class="rounded-3xl shadow-md w-full h-48 object-cover" alt="Service Detail">
+          <img src="https://unsplash.com" 
+               class="rounded-3xl shadow-md w-full h-64 object-cover" alt="Property Detail">
+        </div>
+      </div>
+
+      <!-- Right: Text Content -->
+      <div class="space-y-6">
+        <span class="text-rose-600 font-bold uppercase tracking-wider text-sm">Welcome to Lingayen</span>
+        <h2 class="text-3xl md:text-4xl font-extrabold text-gray-900 leading-tight">
+          Where Coastal Hospitality Meets Modern Luxury
+        </h2>
+        <p class="text-gray-600 text-lg leading-relaxed">
+          ANSADEIS was born out of a passion to provide a sophisticated sanctuary for travelers discovering the beauty of Lingayen. We blend the warmth of traditional Filipino hospitality with modern, curated estate living.
+        </p>
+        <p class="text-gray-600 text-lg leading-relaxed">
+          Whether you are here to experience the history of Pangasinan, lounge by our private pool, or unwind in our meticulously designed luxury suites, our mission is to ensure every stay feels like a masterfully tailored retreat.
+        </p>
+        
+        <!-- Core Pillars Metrics -->
+        <div class="grid grid-cols-3 gap-6 pt-6 border-t border-gray-100">
+          <div>
+            <p class="text-3xl font-black text-rose-600">5 ★</p>
+            <p class="text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Airbnb Rating</p>
+          </div>
+          <div>
+            <p class="text-3xl font-black text-rose-600">100%</p>
+            <p class="text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Guest Safety</p>
+          </div>
+          <div>
+            <p class="text-3xl font-black text-rose-600">24/7</p>
+            <p class="text-sm font-medium text-gray-500 uppercase tracking-wider mt-1">Local Support</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Value Propositions Section -->
+  <section class="bg-white py-20 border-t border-gray-100">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="grid md:grid-cols-3 gap-10">
+        
+        <div class="space-y-4">
+          <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center text-xl">
+            <i class="fa-solid fa-gem"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900">Curated Spaces</h3>
+          <p class="text-gray-600 leading-relaxed">Every room layout, textile choices, and aesthetic accent is hand-selected to establish a clean, contemporary design rhythm.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center text-xl">
+            <i class="fa-solid fa-map-location-dot"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900">Prime Location</h3>
+          <p class="text-gray-600 leading-relaxed">Perfectly anchored in Lingayen, providing effortless transit access to regional culinary mainstays, beaches, and historic landmarks.</p>
+        </div>
+
+        <div class="space-y-4">
+          <div class="w-12 h-12 bg-rose-50 text-rose-600 rounded-2xl flex items-center justify-center text-xl">
+            <i class="fa-solid fa-heart"></i>
+          </div>
+          <h3 class="text-xl font-bold text-gray-900">Guest-First Philosophy</h3>
+          <p class="text-gray-600 leading-relaxed">We stream seamless communication pipelines directly from digital reservation confirmations all the way to checkout day adjustments.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Mobile Menu Toggle
+    const menuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (menuButton && mobileMenu) {
+      menuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        const icon = menuButton.querySelector('i');
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-xmark');
+      });
+    }
+  </script>
+</body>
+</html>

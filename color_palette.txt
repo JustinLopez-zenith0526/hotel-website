@@ -1,0 +1,5 @@
+Guide for Design Palette
+
+#E3DAC9
+#002366
+#C0C0C0
