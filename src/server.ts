@@ -1,34 +1,29 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import cors from 'cors';
-import helmet from 'helmet';
-import morgan from 'morgan';
 import path from 'path';
 
-import hotelRoutes from './routes/hotel.routes';
+import hotelRoutes from './routes/hotel.routes.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(helmet());
-app.use(cors());
-app.use(morgan('dev'));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
-// View engine
+// View Engine Setup
 app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+app.set('views', path.join(process.cwd(), 'src/views'));   // ← Best fix
 
-// Static files
-app.use(express.static(path.join(__dirname, 'public')));
+// Static Files
+app.use(express.static(path.join(process.cwd(), 'src/public')));
 
 // Routes
 app.use('/', hotelRoutes);
 
+// 404 Handler
+app.use((req, res) => {
+  res.status(404).send(`Cannot GET ${req.url}`);
+});
+
 app.listen(PORT, () => {
-  console.log(`Server on http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });

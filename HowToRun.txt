@@ -1,0 +1,2 @@
+Run Server - "npm run dev" in Git Bash
+Run CSS Tailwind - "npm run tailwind:watch" in Git Bash 2nd Terminal

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rooms & Suites - ANSADEIS</title>
+  
+  <link rel="stylesheet" href="/css/output.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 font-sans">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <a href="/" class="flex items-center gap-3">
+          <img src="/images/logo.png" alt="ANSADEIS" class="h-12 w-auto">
+        </a>
+
+        <div class="hidden md:flex items-center space-x-8 text-lg">
+          <a href="/" class="hover:text-rose-600">Home</a>
+          <a href="/rooms" class="text-rose-600 font-semibold">Rooms & Suites</a>
+          <a href="/about" class="hover:text-rose-600">About Us</a>
+          <a href="/contact" class="hover:text-rose-600">Contact</a>
+        </div>
+
+        <a href="<%= airbnbUrl %>" target="_blank" 
+           class="hidden md:block bg-rose-600 hover:bg-rose-700 text-white px-8 py-3 rounded-full font-medium">
+          Book on Airbnb →
+        </a>
+
+        <button id="mobile-menu-button" class="md:hidden text-3xl text-gray-700">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+      </div>
+
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="hidden md:hidden mt-4 py-4 border-t">
+        <div class="flex flex-col space-y-4 text-lg">
+          <a href="/" class="hover:text-rose-600">Home</a>
+          <a href="/rooms" class="text-rose-600 font-semibold">Rooms & Suites</a>
+          <a href="/about" class="hover:text-rose-600">About Us</a>
+          <a href="/contact" class="hover:text-rose-600">Contact</a>
+          <a href="<%= airbnbUrl %>" target="_blank" 
+             class="mt-6 bg-rose-600 text-white py-4 rounded-2xl text-center font-medium">
+            Book on Airbnb →
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    <h1 class="text-4xl font-bold text-center mb-12">Rooms & Suites</h1>
+
+    <div class="grid md:grid-cols-2 gap-10">
+      <div class="bg-white rounded-3xl overflow-hidden shadow-lg">
+        <img src="https://source.unsplash.com/random/600x400/?deluxeroom" class="w-full h-64 object-cover">
+        <div class="p-8">
+          <h3 class="text-2xl font-semibold mb-2">Deluxe Room</h3>
+          <p class="text-gray-600 mb-4">King bed • 35 sqm • City View</p>
+          <p class="text-3xl font-bold text-rose-600 mb-6">₱3,500 <span class="text-sm font-normal text-gray-500">/ night</span></p>
+          <a href="<%= airbnbUrl %>" target="_blank" 
+             class="block text-center bg-rose-600 text-white py-4 rounded-2xl hover:bg-rose-700">
+            Book on Airbnb
+          </a>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-3xl overflow-hidden shadow-lg">
+        <img src="https://source.unsplash.com/random/600x400/?suiteroom" class="w-full h-64 object-cover">
+        <div class="p-8">
+          <h3 class="text-2xl font-semibold mb-2">Executive Suite</h3>
+          <p class="text-gray-600 mb-4">Living area • 65 sqm • Balcony</p>
+          <p class="text-3xl font-bold text-rose-600 mb-6">₱6,800 <span class="text-sm font-normal text-gray-500">/ night</span></p>
+          <a href="<%= airbnbUrl %>" target="_blank" 
+             class="block text-center bg-rose-600 text-white py-4 rounded-2xl hover:bg-rose-700">
+            Book on Airbnb
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const menuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    if (menuButton && mobileMenu) {
+      menuButton.addEventListener('click', () => {
+        mobileMenu.classList.toggle('hidden');
+        const icon = menuButton.querySelector('i');
+        icon.classList.toggle('fa-bars');
+        icon.classList.toggle('fa-xmark');
+      });
+    }
+  </script>
+</body>
+</html>

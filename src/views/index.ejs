@@ -12,41 +12,52 @@
 
   <!-- Navbar -->
   <nav class="bg-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
-      
-      <!-- Logo -->
-      <a href="/" class="flex items-center gap-3">
-        <img src="/images/logo.png" 
-             alt="ANSADEIS" 
-             class="h-12 w-auto">
-        <!-- Optional: Text beside logo -->
-      </a>
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex justify-between items-center">
+        <a href="/" class="flex items-center gap-3">
+          <img src="/images/logo.png" alt="ANSADEIS" class="h-12 w-auto">
+        </a>
 
-      <!-- Menu -->
-      <div class="hidden md:flex items-center space-x-8 text-lg">
-        <a href="/"class="hover:text-rose-600 transition-colors">Home</a>
-        <a href="/rooms" class="hover:text-rose-600 transition-colors">Rooms & Suites</a>
-        <a href="/about" class="hover:text-rose-600 transition-colors">About Us</a>
-        <a href="/contact" class="hover:text-rose-600 transition-colors">Contact</a>
+        <div class="hidden md:flex items-center space-x-8 text-lg">
+          <a href="/" class="hover:text-rose-600 transition-colors">Home</a>
+          <a href="/rooms" class="hover:text-rose-600 transition-colors">Rooms & Suites</a>
+          <a href="/about" class="hover:text-rose-600 transition-colors">About Us</a>
+          <a href="/contact" class="hover:text-rose-600 transition-colors">Contact</a>
+        </div>
+
+        <a href="<%= airbnbUrl %>" target="_blank" 
+           class="hidden md:block bg-rose-600 hover:bg-rose-700 text-white px-8 py-3 rounded-full font-medium transition-all">
+          Book on Airbnb →
+        </a>
+
+        <button id="mobile-menu-button" class="md:hidden text-3xl text-gray-700">
+          <i class="fa-solid fa-bars"></i>
+        </button>
       </div>
 
-      <!-- Book Button -->
-      <a href="<%= airbnbUrl %>" target="_blank" 
-         class="bg-rose-600 hover:bg-rose-700 text-white px-8 py-3 rounded-full font-medium transition-all">
-        Book on Airbnb →
-      </a>
+      <!-- Mobile Menu -->
+      <div id="mobile-menu" class="hidden md:hidden mt-4 py-4 border-t">
+        <div class="flex flex-col space-y-4 text-lg">
+          <a href="/" class="hover:text-rose-600">Home</a>
+          <a href="/rooms" class="hover:text-rose-600">Rooms & Suites</a>
+          <a href="/about" class="hover:text-rose-600">About Us</a>
+          <a href="/contact" class="hover:text-rose-600">Contact</a>
+          <a href="<%= airbnbUrl %>" target="_blank" class="mt-6 bg-rose-600 text-white py-4 rounded-2xl text-center">
+            Book on Airbnb →
+          </a>
+        </div>
+      </div>
     </div>
   </nav>
 
   <!-- Hero Section -->
   <section class="relative h-screen flex items-center justify-center text-center text-white overflow-hidden">
-    <img src="/images/reserve_sq.png"
-         class="absolute inset-0 w-full h-full object-cover" alt="Hotel">
+    <img src="/images/reserve_sq.png" class="absolute inset-0 w-full h-full object-cover" alt="ANSADEIS">
     <div class="absolute inset-0 bg-black/50"></div>
     
     <div class="relative z-10 px-6 max-w-4xl mx-auto">
-      <h1>
-        <img src="/images/logo.png" alt="ANSADEIS" class="h-16 inline-block mb-2">
+      <h1 class="mb-6">
+        <img src="/images/logo.png" alt="ANSADEIS" class="h-20 md:h-24 mx-auto">
       </h1>
       <p class="text-xl md:text-2xl mb-10">Experience luxury and comfort in Lingayen!</p>
       
@@ -57,5 +68,54 @@
     </div>
   </section>
 
+  <!-- Amenities Section -->
+  <section class="py-20 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-12">Our Amenities</h2>
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div class="text-center">
+          <i class="fa-solid fa-wifi text-4xl text-rose-600 mb-4"></i>
+          <h3 class="font-semibold">Free WiFi</h3>
+        </div>
+        <div class="text-center">
+          <i class="fa-solid fa-car text-4xl text-rose-600 mb-4"></i>
+          <h3 class="font-semibold">Free Parking</h3>
+        </div>
+        <div class="text-center">
+          <i class="fa-solid fa-swimmer text-4xl text-rose-600 mb-4"></i>
+          <h3 class="font-semibold">Swimming Pool</h3>
+        </div>
+        <div class="text-center">
+          <i class="fa-solid fa-utensils text-4xl text-rose-600 mb-4"></i>
+          <h3 class="font-semibold">Restaurant</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Section -->
+  <section class="py-20 bg-gray-100">
+    <div class="max-w-7xl mx-auto px-6">
+      <h2 class="text-4xl font-bold text-center mb-12">Gallery</h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <img src="https://source.unsplash.com/random/600x400/?hotelroom" class="rounded-2xl shadow-md hover:scale-105 transition" alt="Room">
+        <img src="https://source.unsplash.com/random/600x400/?hotelpool" class="rounded-2xl shadow-md hover:scale-105 transition" alt="Pool">
+        <img src="https://source.unsplash.com/random/600x400/?hoteldining" class="rounded-2xl shadow-md hover:scale-105 transition" alt="Restaurant">
+      </div>
+    </div>
+  </section>
+
+  <script>
+    // Mobile Menu Toggle
+    const menuButton = document.getElementById('mobile-menu-button');
+    const mobileMenu = document.getElementById('mobile-menu');
+    
+    menuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
+      const icon = menuButton.querySelector('i');
+      icon.classList.toggle('fa-bars');
+      icon.classList.toggle('fa-xmark');
+    });
+  </script>
 </body>
 </html>
