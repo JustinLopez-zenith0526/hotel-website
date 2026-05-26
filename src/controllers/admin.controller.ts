@@ -116,3 +116,24 @@ export const updateRoomDetails = async (req: Request, res: Response) => {
     res.status(500).send("Database Update Faulted");
   }
 };
+
+// 6. GET: Fetch specific room row details and render the standalone edit interface
+export const getEditPage = async (req: Request, res: Response) => {
+  try {
+    const { id } = req.params;
+    
+    const targetRoom = await prisma.room.findUnique({
+      where: { id: String(id) }
+    });
+
+    if (!targetRoom) {
+      res.status(404).send("Target hotel listing asset not found.");
+      return;
+    }
+
+    res.render('admin-edit', { room: targetRoom });
+  } catch (error) {
+    console.error("Failed to render edit scene interface:", error);
+    res.status(500).send("PMS Dashboard Route Error");
+  }
+};

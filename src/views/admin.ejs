@@ -23,7 +23,7 @@
     
     <!-- LEFT PANEL: Create Form -->
     <section class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 lg:col-span-1 h-fit">
-      <h2 class="text-xl font-bold text-gray-900 mb-2">Create New Asset</h2>
+      <h2 class="text-xl font-bold text-gray-900 mb-2">Create New Listing</h2>
       <p class="text-xs text-gray-500 mb-6">Initialize a new hotel suite room listing straight into your database.</p>
 
       <form action="/admin/rooms" method="POST" class="space-y-4">
@@ -79,7 +79,7 @@
       </form>
     </section>
 
-    <!-- RIGHT PANEL: Live Inventory CRUD Grid -->
+<!-- RIGHT PANEL: Live Inventory CRUD Grid -->
     <section class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 lg:col-span-2">
       <h2 class="text-xl font-bold text-gray-900 mb-2">Active Catalog & Operations</h2>
       <p class="text-xs text-gray-500 mb-6">Modify live availability statuses, update specifics, or purge listings instantly.</p>
@@ -90,7 +90,7 @@
             <tr class="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-wider border-b border-gray-100">
               <th class="p-4">Listing details</th>
               <th class="p-4">Tracking ID</th>
-              <th class="p-4">Live PMS Status</th>
+              <th class="p-4">Live Status</th>
               <th class="p-4 text-center">Actions</th>
             </tr>
           </thead>
@@ -123,18 +123,20 @@
                     </form>
                   </td>
 
-                  <!-- ACTION ACTIONS (EDIT & DELETE BUTTONS) -->
-                  <td class="p-4 text-center space-x-3 whitespace-nowrap">
-                    <!-- Trigger Modal Button -->
-                    <button type="button" 
-                            onclick="openEditModal('<%= room.id %>', '<%= room.name %>', '<%= room.price %>', '<%= room.roomType %>', '<%= room.bedType %>', '<%= room.viewType %>', '<%= room.imageUrl %>', '<%= room.airbnbUrl %>')"
-                            style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 6px 12px; rounded-radius: 8px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; margin-right: 8px;">
-                        Edit
-                    </button>
+                  <!-- ACTION ACTIONS (EDIT & DELETE BUTTONS - FIXED WITH DATASETS) -->
+                  <td class="p-4 text-center space-x-3 whitespace-nowrap" style="text-align: center; white-space: nowrap;">
 
-                    <form action="/admin/rooms/<%= room.id %>/delete" method="POST" onsubmit="return confirm('Permanently delete this listing?')" class="inline-block">
+                    <!-- Native anchor link avoids JavaScript click freezes entirely -->
+                    <a href="/admin/rooms/<%= room.id %>/edit" 
+                       style="display: inline-flex; align-items: center; justify-content: center; text-decoration: none; gap: 4px; background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; margin-right: 8px;">
+                        Edit
+                    </a>
+                    
+
+                    <form action="/admin/rooms/<%= room.id %>/delete" method="POST" onsubmit="return confirm('Permanently delete this listing?')" class="inline-block" style="display: inline-block; margin: 0;">
                       <button type="submit" 
-                                class="inline-flex items-center gap-1 bg-red-50 border border-red-200 text-red-600 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm">
+                                class="inline-flex items-center gap-1 bg-red-50 border border-red-200 text-red-600 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm"
+                                style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background-color: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 6px 12px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer;">
                             Delete
                       </button>
                     </form>
@@ -151,12 +153,3 @@
       </div>
     </section>
   </main>
-
-  <!-- POPUP EDIT MODAL CONTAINER (HIDDEN BY DEFAULT) -->
-  <div id="editModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-    <section class="bg-white rounded-2xl max-w-lg w-full p-8 shadow-2xl border border-gray-100 relative animate-fade-in animate-scale-up">
-      <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl">
-        <i class="fa-solid fa-xmark"></i>
-      </button>
-
-      <h2 class="text-xl font-bold text-gray-900 mb-1">Modify Room Details</h2>

@@ -16,7 +16,7 @@ const PORT = process.env.PORT || 3000;
 
 // View Engine Setup
 app.set('view engine', 'ejs');
-app.set('views', path.join(process.cwd(), 'src/views'));   // ← Best fix
+app.set('views', path.join(process.cwd(), 'src/views'));
 
 // Static Files
 app.use(express.static(path.join(process.cwd(), 'src/public')));
