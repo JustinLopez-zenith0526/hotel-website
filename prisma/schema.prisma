@@ -28,16 +28,17 @@ model Room {
 
 
 model Booking {
-  id          String   @id @default(uuid())
-  roomId      String   // Links the booking to a specific room row
-  room        Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
-  guestName   String
-  guestEmail  String
-  guestPhone  String
-  checkIn     DateTime
-  checkOut    DateTime
-  totalPrice  Float
-  status      String   @default("Pending") // "Pending", "Approved", "Cancelled"
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id             String   @id @default(uuid())
+  roomId         String
+  room           Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  guestName      String
+  guestEmail     String
+  guestPhone     String
+  numberOfGuests Int      // ← REPLACE LINE 37 WITH THIS CLEAN BLUEPRINT DEFINITION!
+  checkIn        DateTime
+  checkOut       DateTime
+  totalPrice     Float
+  status         String   @default("Pending")
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

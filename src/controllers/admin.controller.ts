@@ -56,10 +56,11 @@ export const getAdminDashboard = async (req: Request, res: Response) => {
 };
 
 
-// 2. CREATE: Save new room variables to Supabase
+// 2. CREATE: Save new room parameters to Supabase
 export const createRoomListing = async (req: Request, res: Response) => {
   try {
     const { name, price, roomType, bedType, viewType, imageUrl, airbnbUrl, status } = req.body;
+    
     await prisma.room.create({
       data: {
         name,
@@ -70,6 +71,7 @@ export const createRoomListing = async (req: Request, res: Response) => {
         imageUrl,
         airbnbUrl: airbnbUrl || "https://airbnb.com",
         status: status || "Available"
+        // If you scale room capacities later, parse out: maxGuests: parseInt(maxGuests, 10) || 4
       }
     });
     res.redirect('/admin');
@@ -78,6 +80,7 @@ export const createRoomListing = async (req: Request, res: Response) => {
     res.status(500).send("Database Insertion Mismatch");
   }
 };
+
 
 // 3. UPDATE: Change availability tracking status dropdowns instantly
 export const updateRoomStatus = async (req: Request, res: Response) => {
@@ -123,7 +126,6 @@ export const deleteRoomListing = async (req: Request, res: Response) => {
   }
 };
 
-// 5. UPDATE: Full modification path for details forms standalone view page
 export const updateRoomDetails = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
