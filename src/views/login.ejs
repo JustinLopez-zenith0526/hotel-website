@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>System Authentication</title>
+  <link rel="stylesheet" href="/css/output.css">
+</head>
+<body class="bg-gray-900 flex items-center justify-center h-screen font-sans">
+
+  <main class="bg-white p-8 rounded-2xl shadow-2xl max-w-sm w-full border border-gray-100">
+    <div class="text-center mb-6">
+      <span class="bg-rose-100 text-rose-700 text-xs font-black uppercase tracking-widest px-2.5 py-1 rounded">Security Gate</span>
+      <h1 class="text-xl font-bold text-gray-900 mt-3">ANSADEIS Console Log</h1>
+    </div>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+      <div style="background-color: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 12px; border-radius: 8px; font-size: 13px; font-weight: 600; margin-bottom: 16px; text-align: center;">
+        Invalid authorization token key.
+      </div>
+    <% } %>
+
+    <!-- The form submits to your secret portal URL -->
+    <form action="/management-gate" method="POST" class="space-y-4">
+      <div class="space-y-1.5">
+        <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Administrative Password</label>
+        <input type="password" name="password" required placeholder="••••••••" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3.5 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
+      </div>
+
+      <button type="submit" class="w-full bg-gray-900 hover:bg-gray-800 text-white font-bold uppercase tracking-wider text-xs py-4 rounded-xl transition-all shadow-md">
+        Verify Credentials
+      </button>
+    </form>
+  </main>
+
+</body>
+</html>

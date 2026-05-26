@@ -12,16 +12,32 @@ datasource db {
 }
 
 model Room {
+  id          String    @id @default(uuid())
+  name        String    // "Cozy Room", "Deluxe Room", "Executive Suite"
+  price       Float     // 3500, 4500, 9500
+  roomType    String    // "Room 4", "Room 5", "Room 1", "Room 3", "Room 2"
+  bedType     String   
+  viewType    String   
+  imageUrl    String
+  airbnbUrl   String    @default("https://airbnb.com")
+  status      String    @default("Available") // "Available", "Booked", "Maintenance"
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  bookings    Booking[]
+}
+
+
+model Booking {
   id          String   @id @default(uuid())
-  name        String    
-  price       Float     
-  roomType    String       
-  bedType     String    
-  viewType    String    
-  imageUrl    String    
-  airbnbUrl   String   @default("https://airbnb.com")
-  status      String   @default("Available") // New field: "Available", "Booked","Maintenance"
+  roomId      String   // Links the booking to a specific room row
+  room        Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  guestName   String
+  guestEmail  String
+  guestPhone  String
+  checkIn     DateTime
+  checkOut    DateTime
+  totalPrice  Float
+  status      String   @default("Pending") // "Pending", "Approved", "Cancelled"
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }
-
