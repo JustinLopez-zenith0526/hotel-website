@@ -4,10 +4,24 @@
 // Get a free hosted Postgres database in seconds: `npx create-db`
 
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
 }
+
+model Room {
+  id          String   @id @default(uuid())
+  name        String    
+  price       Float     
+  roomType    String       
+  bedType     String    
+  viewType    String    
+  imageUrl    String    
+  airbnbUrl   String   @default("https://airbnb.com")
+  status      String   @default("Available") // New field: "Available", "Booked","Maintenance"
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+

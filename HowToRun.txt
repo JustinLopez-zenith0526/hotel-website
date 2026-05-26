@@ -1,6 +1,14 @@
 Run Server - "npm run dev" in Git Bash
 Run CSS Tailwind - "npm run tailwind:watch" in Git Bash 2nd Terminal
+RUN Prsima Database Supabase - "npx prisma studio" in Git Bash 3rd Terminal for Visual Edit
 
-cozy
-deluxe
-suite
+
+Room & Suites CARDS
+cozy - 3490
+deluxe - 4490
+suite - 9490
+
+
+Queen size
+
+Balcony

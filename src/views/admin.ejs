@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PMS Core Admin - ANSADEIS</title>
+  <link rel="stylesheet" href="/css/output.css">
+  <link rel="stylesheet" href="https://cloudflare.com">
+</head>
+<body class="bg-gray-100 font-sans antialiased tracking-wide relative">
+
+  <header class="bg-gray-900 text-white px-8 py-5 flex justify-between items-center shadow-md">
+    <div class="flex items-center gap-3">
+      <span class="bg-rose-600 text-xs uppercase font-black tracking-widest px-2.5 py-1 rounded">PMS Engine v2.5</span>
+      <h1 class="text-xl font-bold tracking-tight">ANSADEIS Control Center</h1>
+    </div>
+    <a href="/rooms" target="_blank" class="text-sm text-gray-400 hover:text-white transition-colors">
+      Live View <i class="fa-solid fa-arrow-up-right-from-square ml-1 text-xs"></i>
+    </a>
+  </header>
+
+  <main class="max-w-[95rem] mx-auto px-6 py-12 grid lg:grid-cols-3 gap-10">
+    
+    <!-- LEFT PANEL: Create Form -->
+    <section class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 lg:col-span-1 h-fit">
+      <h2 class="text-xl font-bold text-gray-900 mb-2">Create New Asset</h2>
+      <p class="text-xs text-gray-500 mb-6">Initialize a new hotel suite room listing straight into your database.</p>
+
+      <form action="/admin/rooms" method="POST" class="space-y-4">
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Display Name</label>
+          <input type="text" name="name" required placeholder="e.g., Garden Suite" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Price (PHP)</label>
+            <input type="number" name="price" required placeholder="3500" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Room ID</label>
+            <input type="text" name="roomType" required placeholder="Room 1" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Beds</label>
+            <input type="text" name="bedType" required placeholder="King bed" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
+          </div>
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-gray-700">View / Balcony</label>
+            <input type="text" name="viewType" required placeholder="City View" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Initial Status Availability</label>
+          <select name="status" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
+            <option value="Available">Available</option>
+            <option value="Booked">Booked (Blocked)</option>
+            <option value="Maintenance">Maintenance</option>
+          </select>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Photo URL</label>
+          <input type="url" name="imageUrl" required placeholder="https://unsplash.com..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Airbnb Redirect URL</label>
+          <input type="url" name="airbnbUrl" placeholder="https://airbnb.com..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
+        </div>
+
+        <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold uppercase tracking-wider text-xs py-4 rounded-xl transition-all shadow-md font-semibold">
+          Save Room to Cloud
+        </button>
+      </form>
+    </section>
+
+    <!-- RIGHT PANEL: Live Inventory CRUD Grid -->
+    <section class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200 lg:col-span-2">
+      <h2 class="text-xl font-bold text-gray-900 mb-2">Active Catalog & Operations</h2>
+      <p class="text-xs text-gray-500 mb-6">Modify live availability statuses, update specifics, or purge listings instantly.</p>
+
+      <div class="overflow-x-auto rounded-xl border border-gray-100">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-wider border-b border-gray-100">
+              <th class="p-4">Listing details</th>
+              <th class="p-4">Tracking ID</th>
+              <th class="p-4">Live PMS Status</th>
+              <th class="p-4 text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50 font-medium text-gray-700">
+            <% if (rooms && rooms.length > 0) { %>
+              <% rooms.forEach(room => { %>
+                <tr class="hover:bg-gray-50/50 transition-colors">
+                  <td class="p-4 flex items-center gap-3">
+                    <img src="<%= room.imageUrl %>" class="w-12 h-12 object-cover rounded-lg bg-gray-100 shadow-inner" alt="">
+                    <div>
+                      <p class="font-bold text-gray-900"><%= room.name %></p>
+                      <p class="text-xs font-bold text-rose-600">₱<%= room.price.toLocaleString() %></p>
+                    </div>
+                  </td>
+                  
+                  <td class="p-4">
+                    <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md text-xs font-semibold"><%= room.roomType %></span>
+                  </td>
+                  
+                  <td class="p-4">
+                    <form action="/admin/rooms/<%= room.id %>/status" method="POST" onchange="this.submit()">
+                      <select name="status" class="text-xs font-bold border rounded-lg px-2.5 py-1.5 focus:outline-none cursor-pointer
+                        <% if(room.status === 'Available') { %> border-emerald-200 bg-emerald-50 text-emerald-700 <% } %>
+                        <% if(room.status === 'Booked') { %> border-amber-200 bg-amber-50 text-amber-700 <% } %>
+                        <% if(room.status === 'Maintenance') { %> border-red-200 bg-red-50 text-red-700 <% } %>">
+                        <option value="Available" <%= room.status === 'Available' ? 'selected' : '' %>>🟢 Available</option>
+                        <option value="Booked" <%= room.status === 'Booked' ? 'selected' : '' %>>🟡 Booked</option>
+                        <option value="Maintenance" <%= room.status === 'Maintenance' ? 'selected' : '' %>>🔴 Maintenance</option>
+                      </select>
+                    </form>
+                  </td>
+
+                  <!-- ACTION ACTIONS (EDIT & DELETE BUTTONS) -->
+                  <td class="p-4 text-center space-x-3 whitespace-nowrap">
+                    <!-- Trigger Modal Button -->
+                    <button type="button" 
+                            onclick="openEditModal('<%= room.id %>', '<%= room.name %>', '<%= room.price %>', '<%= room.roomType %>', '<%= room.bedType %>', '<%= room.viewType %>', '<%= room.imageUrl %>', '<%= room.airbnbUrl %>')"
+                            style="display: inline-flex; align-items: center; justify-content: center; gap: 4px; background-color: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; padding: 6px 12px; rounded-radius: 8px; border-radius: 8px; font-size: 12px; font-weight: 700; cursor: pointer; margin-right: 8px;">
+                        Edit
+                    </button>
+
+                    <form action="/admin/rooms/<%= room.id %>/delete" method="POST" onsubmit="return confirm('Permanently delete this listing?')" class="inline-block">
+                      <button type="submit" 
+                                class="inline-flex items-center gap-1 bg-red-50 border border-red-200 text-red-600 hover:bg-red-600 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all shadow-sm">
+                            Delete
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+              <% }); %>
+            <% } else { %>
+              <tr>
+                <td colspan="4" class="p-8 text-center text-gray-400">Inventory is completely empty.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <!-- POPUP EDIT MODAL CONTAINER (HIDDEN BY DEFAULT) -->
+  <div id="editModal" class="hidden fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <section class="bg-white rounded-2xl max-w-lg w-full p-8 shadow-2xl border border-gray-100 relative animate-fade-in animate-scale-up">
+      <button onclick="closeEditModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600 text-xl">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+
+      <h2 class="text-xl font-bold text-gray-900 mb-1">Modify Room Details</h2>
