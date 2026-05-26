@@ -2,7 +2,12 @@ import express from 'express';
 import dotenv from 'dotenv';
 import path from 'path';
 
+
+
 import hotelRoutes from './routes/hotel.routes.js';
+import adminRoutes from './routes/admin.ruote.js';
+
+
 
 dotenv.config();
 
@@ -18,7 +23,7 @@ app.use(express.static(path.join(process.cwd(), 'src/public')));
 
 // Routes
 app.use('/', hotelRoutes);
-
+app.use('/admin', adminRoutes);
 // 404 Handler
 app.use((req, res) => {
   res.status(404).send(`Cannot GET ${req.url}`);
