@@ -67,72 +67,140 @@
     </div>
   </header>
 
-  <!-- Rooms Cards Main Container -->
+    <!-- Rooms Cards Main Container -->
   <main class="max-w-7xl mx-auto px-6 py-16">
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10 items-start">
 
-      <!-- 1. The EJS Loop: Cycles through your dynamic database array rows -->
       <% if (rooms && rooms.length > 0) { %>
-        <% rooms.forEach(room => { %>
+        <% rooms.forEach(pkg => { %>
 
           <div class="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 group hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
             
-            <!-- TOP CARD SECTION: Photos & Absolute Anchored Badges -->
+            <!-- TOP CARD SECTION: Photos -->
             <div class="overflow-hidden h-72 relative bg-gray-100">
-              <!-- Live Database Image -->
-              <img src="<%= room.imageUrl %>" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="<%= room.name %>">
+              <img src="<%= pkg.imageUrl %>" class="w-full h-full object-cover group-hover:scale-105 transition duration-500" alt="<%= pkg.name %>">
               
-              <!-- Top Left: High-Contrast Dark Tracking Badge -->
+              <!-- Left-Aligned: Category Package Badge -->
               <span class="absolute top-4 left-4 bg-gray-900/80 backdrop-blur-sm text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-sm">
-                <i class="fa-solid fa-hotel mr-1 text-rose-400"></i> <%= room.roomType %>
-              </span>
-
-              <!-- Top Right: Fixed Visibility Availability Badge System -->
-              <span class="absolute top-4 right-4 text-xs font-black uppercase tracking-wider px-3 py-1.5 rounded-full shadow-md backdrop-blur-sm text-white z-10
-                <% if(room.status === 'Available') { %> bg-emerald-600/90 text-white border border-emerald-500 <% } %>
-                <% if(room.status === 'Booked') { %> bg-amber-500/95 text-amber-950 border border-amber-400 <% } %>
-                <% if(room.status === 'Maintenance') { %> bg-red-600/90 text-white border border-red-500 <% } %>">
-                <% if(room.status === 'Available') { %>Available <% } %>
-                <% if(room.status === 'Booked') { %>Booked <% } %>
-                <% if(room.status === 'Maintenance') { %>Maintenance <% } %>
+                👑 <%= pkg.name %>
               </span>
             </div>
             
             <!-- BOTTOM CARD SECTION: Details Content Box -->
             <div class="p-8 space-y-6">
               <div class="space-y-2">
-                <h3 class="text-2xl font-bold text-gray-900"><%= room.name %></h3>
+                <h3 class="text-2xl font-bold text-gray-900"><%= pkg.name %></h3>
                 
-                <!-- Fixed: Changed 'text-gray-250' to standard 'text-gray-400' to prevent styling alignment breakdown -->
                 <div class="flex flex-wrap items-center gap-y-2 text-gray-600 text-sm font-medium">
-                  <span class="inline-flex items-center"><i class="fa-solid fa-bed mr-2 text-rose-500"></i><%= room.bedType %></span>
+                  <span class="inline-flex items-center"><i class="fa-solid fa-bed mr-2 text-rose-500"></i><%= pkg.bedType %></span>
                   <span class="mx-3 text-gray-400">•</span>
-                  <span class="inline-flex items-center"><i class="fa-solid fa-cloud-sun mr-2 text-rose-500"></i><%= room.viewType || "Standard View" %></span>
+                  <span class="inline-flex items-center"><i class="fa-solid fa-cloud-sun mr-2 text-rose-500"></i><%= pkg.viewType || "Standard View" %></span>
                 </div>
               </div>
               
               <div class="flex items-baseline justify-between border-t border-gray-50 pt-4">
                 <p class="text-3xl font-extrabold text-rose-600">
-                  ₱<%= room.price.toLocaleString() %> <span class="text-sm font-normal text-gray-500 tracking-normal">/ night</span>
+                  ₱<%= pkg.price.toLocaleString() %> <span class="text-sm font-normal text-gray-500 tracking-normal">/ night</span>
                 </p>
               </div>
 
-              <a href="<%= room.airbnbUrl %>" target="_blank" 
-                 class="block text-center bg-rose-600 hover:bg-rose-700 text-white font-semibold uppercase tracking-wider text-sm py-4 rounded-xl transition-colors shadow-md hover:shadow-rose-100">
-                Book on Airbnb
-              </a>
+              <!-- DYNAMIC UNIT SELECTION BOOKING FORM ACCORDION -->
+              <div class="border-t border-gray-100 pt-4">
+                
+                <!-- UPGRADED: Pass a calculated list of ALL approved bookings for this package -->
+                <% 
+                  let allBlockedRanges = [];
+                  pkg.units.forEach(unit => {
+                    if (unit.blockedDates) {
+                      allBlockedRanges.push({
+                        unitId: unit.id,
+                        dates: unit.blockedDates
+                      });
+                    }
+                  });
+                %>
+                
+                <details name="room-accordion" 
+                         class="group border border-gray-200 rounded-2xl bg-gray-50/50 overflow-hidden [&_summary::-webkit-details-marker]:hidden"
+                         data-package-bookings='<%= JSON.stringify(allBlockedRanges) %>'
+                         data-total-units="<%= pkg.units.length %>">
+                  
+                  <summary class="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors">
+                    <span class="text-xs font-bold text-gray-800 tracking-wide uppercase">⚡ Reserve Directly Here</span>
+                    <span class="transition duration-300 group-open:-rotate-180 text-rose-600 text-xs">▼</span>
+                  </summary>
+
+                  <!-- The form submission target URL is handled dynamically via Javascript below -->
+                  <form method="POST" id="form-<%= pkg.name.replace(/\s+/g, '-') %>" onsubmit="this.action='/rooms/' + this.roomId.value + '/book';" class="p-4 bg-white border-t border-gray-200 space-y-4">
+                    
+                    <!-- PRO-GRADE RESET: Stores the permanent unit name securely in data-num -->
+                    <div class="space-y-1 relative">
+                      <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">Select Available Unit</label>
+                      <select name="roomId" required 
+                              class="room-unit-selector w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs font-bold focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
+                        <option value="" disabled selected>-- Choose a room unit --</option>
+                        <% let dynamicAvailableCount = 0; %>
+                        <% pkg.units.forEach(unit => { dynamicAvailableCount++; %>
+                          <option value="<%= unit.id %>" data-num="<%= unit.roomNumber %>" data-blocked='<%= JSON.stringify(unit.blockedDates) %>'>
+                            <%= unit.roomNumber %> (Available)
+                          </option>
+                        <% }); %>
+                      </select>
+                    </div>
+
+
+
+                    <div class="grid grid-cols-2 gap-3">
+                      <div class="space-y-1">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">Check-In</label>
+                        <input type="date" name="checkIn" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-rose-500">
+                      </div>
+                      <div class="space-y-1">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">Check-Out</label>
+                        <input type="date" name="checkOut" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-2.5 py-1.5 text-xs focus:outline-none focus:border-rose-500">
+                      </div>
+                    </div>
+
+                    <div class="space-y-1">
+                      <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">Full Name</label>
+                      <input type="text" name="guestName" required placeholder="Juana Dela Cruz" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500">
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                      <div class="space-y-1">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">Email Address</label>
+                        <input type="email" name="guestEmail" required placeholder="juana@example.com" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-rose-500">
+                      </div>
+                      <div class="space-y-1">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">Mobile Phone</label>
+                        <input type="tel" name="guestPhone" required placeholder="09123456789" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-rose-500">
+                      </div>
+                    </div>
+
+                    <!-- Deactivates block completely if all units under this package tier are full -->
+                    <button type="submit" 
+                            <%= dynamicAvailableCount === 0 ? 'disabled' : '' %>
+                            class="w-full text-center bg-rose-600 hover:bg-rose-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold uppercase tracking-wider text-[11px] py-3 rounded-xl transition-all shadow-md">
+                      <%= dynamicAvailableCount > 0 ? 'Submit Reservation Request' : 'Fully Booked / Unavailable' %>
+                    </button>
+                  </form>
+                </details>
+              </div>
+
             </div>
           </div>
 
         <% }); %>
       <% } else { %>
         <div class="col-span-full text-center py-12">
-          <p class="text-gray-500 text-lg font-medium">No accommodations found. Please create listings via the dashboard template panel.</p>
+          <p class="text-gray-500 text-lg font-medium">No accommodations found.</p>
         </div>
       <% } %>
 
     </div>
   </main>
+
+
 
 
   <script>
@@ -149,5 +217,157 @@
       });
     }
   </script>
+
+  <!-- REAL-TIME CALENDAR CALCULATION & OVERLAP PROTECTION INTERCEPTOR -->
+  <script>
+    // Helper function to format Date object into YYYY-MM-DD
+    function formatDateString(date) {
+      return date.toISOString().split('T')[0];
+    }
+
+    document.addEventListener('change', function(event) {
+      const targetInput = event.target;
+      if (targetInput.name !== 'checkIn' && targetInput.name !== 'checkOut') return;
+
+      const form = targetInput.closest('form');
+      const accordion = targetInput.closest('details');
+      if (!form || !accordion) return;
+
+      const checkInInput = form.querySelector('input[name="checkIn"]');
+      const checkOutInput = form.querySelector('input[name="checkOut"]');
+      const unitSelector = form.querySelector('.room-unit-selector');
+      const submitBtn = form.querySelector('button[type="submit"]');
+
+      if (!checkInInput || !checkOutInput || !unitSelector) return;
+
+      const userIn = checkInInput.value;
+      const userOut = checkOutInput.value;
+
+      // Extract our master package bookings arrays
+      const packageBookings = JSON.parse(accordion.dataset.packageBookings || '[]');
+      const totalUnitsInPackage = parseInt(accordion.dataset.totalUnits || '1', 10);
+
+      // 🛡️ STEP 1: REAL-TIME DATE RANGE VALIDATION
+      if (userIn && userOut) {
+        const userInDate = new Date(userIn);
+        const userOutDate = new Date(userOut);
+
+        if (userOutDate <= userInDate) {
+          alert("Check-Out date must be after your Check-In date!");
+          checkOutInput.value = "";
+          return;
+        }
+
+        // Check how many individual physical room units are completely occupied during this chosen date window
+        let occupiedUnitsCount = 0;
+
+        // Create an array of all dates the user wants to stay
+        let requestedDates = [];
+        let currentDate = new Date(userInDate);
+        while (currentDate < userOutDate) {
+          requestedDates.push(formatDateString(currentDate));
+          currentDate.setDate(currentDate.getDate() + 1);
+        }
+
+        // Loop through all units to see if they are occupied on ANY of the requested dates
+        packageBookings.forEach(unitBooking => {
+          let unitIsOccupied = false;
+          
+          unitBooking.dates.forEach(range => {
+            const bookedIn = new Date(range.start);
+            const bookedOut = new Date(range.end);
+            
+            // Check overlap
+            if (userInDate < bookedOut && userOutDate > bookedIn) {
+              unitIsOccupied = true;
+            }
+          });
+
+          if (unitIsOccupied) {
+            occupiedUnitsCount++;
+          }
+        });
+
+        // If the number of occupied units matches the total rooms available in this tier, block the dates!
+        if (occupiedUnitsCount >= totalUnitsInPackage) {
+          alert(`Sorry! All rooms under this package are fully booked from ${new Date(userIn).toLocaleDateString()} to ${new Date(userOut).toLocaleDateString()}. Please select different dates.`);
+          
+          // Reset fields automatically to force a valid entry selection
+          checkInInput.value = "";
+          checkOutInput.value = "";
+          
+          Array.from(unitSelector.options).forEach(opt => {
+            if (opt.value) {
+              opt.disabled = false;
+              opt.text = (opt.dataset.num || "Room") + " (Available)";
+            }
+          });
+          
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Please Select Dates First";
+          }
+          return;
+        }
+      }
+
+      // 🛡️ STEP 2: DROPDOWN UPDATE ENFORCEMENT (If dates pass the master block test)
+      if (userIn && userOut) {
+        const userInDate = new Date(userIn);
+        const userOutDate = new Date(userOut);
+        let totalValidAvailableOptions = 0;
+
+        Array.from(unitSelector.options).forEach(option => {
+          if (!option.value) return;
+
+          const cleanNum = option.dataset.num || "Room";
+          const blockedRangesRaw = option.dataset.blocked;
+          if (!blockedRangesRaw) return;
+
+          const blockedRanges = JSON.parse(blockedRangesRaw);
+          let isUnitBooked = false;
+
+          blockedRanges.forEach(range => {
+            const existingIn = new Date(range.start);
+            const existingOut = new Date(range.end);
+
+            if (userInDate < existingOut && userOutDate > existingIn) {
+              isUnitBooked = true;
+            }
+          });
+
+          if (isUnitBooked) {
+            option.disabled = true;
+            option.text = `${cleanNum} (Fully Booked)`;
+            if (unitSelector.value === option.value) unitSelector.value = "";
+          } else {
+            option.disabled = false;
+            option.text = `${cleanNum}(Available)`;
+            totalValidAvailableOptions++;
+          }
+        });
+
+        if (totalValidAvailableOptions === 0) {
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerText = "No Units Available For These Dates";
+          }
+        } else {
+          if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerText = "Submit Reservation Request";
+          }
+        }
+      }
+    });
+
+    // Enforce HTML Calendar minimum bounds dynamically to block past date checkouts
+    document.querySelectorAll('input[type="date"]').forEach(input => {
+      input.min = new Date().toISOString().split('T')[0];
+    });
+  </script>
+
+
+
 </body>
 </html>
