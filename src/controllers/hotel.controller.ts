@@ -94,35 +94,31 @@ export const getRoomsPage = async (req: Request, res: Response) => {
 };
 
 
-// Add 'createBookingInquiry' to your hotel.controller.ts exports
 export const createBookingInquiry = async (req: any, res: any) => {
   try {
-    const { id } = req.params; // Room ID
-    const { guestName, guestEmail, guestPhone, checkIn, checkOut } = req.body;
+    const { id } = req.params;
+    // 1. Add 'numberOfGuests' to your request body destructuring list
+    const { guestName, guestEmail, guestPhone, numberOfGuests, checkIn, checkOut } = req.body;
 
-    // 1. Fetch the room to verify pricing
     const room = await prisma.room.findUnique({ where: { id } });
     if (!room) return res.status(404).send("Room not found");
 
-    // 2. Compute date difference to find total nights
     const dateIn = new Date(checkIn);
     const dateOut = new Date(checkOut);
     const timeDiff = dateOut.getTime() - dateIn.getTime();
     const totalNights = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
-    if (totalNights <= 0) {
-      return res.status(400).send("Check-out date must be after check-in date.");
-    }
-
+    if (totalNights <= 0) return res.status(400).send("Invalid dates");
     const totalCalculatedPrice = room.price * totalNights;
 
-    // 3. Save reservation row into Supabase (Bypasses local type mapping anomalies safely)
+    // 2. This is where the JavaScript calculation belongs! Inside your .ts file:
     await (prisma as any).booking.create({
       data: {
         roomId: id,
         guestName,
         guestEmail,
         guestPhone,
+        numberOfGuests: parseInt(numberOfGuests, 10) || 1, // ← Maps cleanly to the Int column
         checkIn: dateIn,
         checkOut: dateOut,
         totalPrice: totalCalculatedPrice,
@@ -130,11 +126,10 @@ export const createBookingInquiry = async (req: any, res: any) => {
       }
     });
 
-    // 4. Send success query parameter back to rooms view
     res.redirect('/rooms?success=true');
   } catch (error) {
-    console.error("Booking generation failed:", error);
-    res.status(500).send("Internal Server Transaction Failure");
+    console.error(error);
+    res.status(500).send("Internal Server Error");
   }
 };
 

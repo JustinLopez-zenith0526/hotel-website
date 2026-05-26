@@ -96,6 +96,10 @@
           <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Photo URL</label>
           <input type="url" name="imageUrl" required placeholder="https://unsplash.com..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
         </div>
+            <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Max Guest Capacity</label>
+            <input type="number" name="maxGuests" required min="1" max="20" value="4" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all text-center font-bold">
+          </div>
+        </div>
 
         <div class="space-y-1.5">
           <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Airbnb Redirect URL</label>
@@ -277,7 +281,17 @@
                       <td class="p-4">
                         <p class="font-bold text-gray-900"><%= booking.guestName %></p>
                         <p class="text-xs text-gray-400 font-normal"><%= booking.guestEmail %> • <%= booking.guestPhone %></p>
+                        
+                        <!-- ADDED: Dynamic Traveler Load Counting Badge -->
+                        <p class="text-[11px] mt-1">
+                          <span class="bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded border border-blue-100"><%= booking.numberOfGuests %> PAX</span>
+                        </p>
+
+                        <p class="text-[11px] text-rose-500 font-semibold mt-1">
+                          Requested: <%= new Date(booking.createdAt).toLocaleDateString() %>
+                        </p>
                       </td>
+
                       <td class="p-4">
                         <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md text-xs font-semibold"><%= booking.room ? booking.room.roomType : 'Unknown Unit' %></span>
                       </td>

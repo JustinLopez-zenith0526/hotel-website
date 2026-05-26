@@ -82,7 +82,7 @@
               
               <!-- Left-Aligned: Category Package Badge -->
               <span class="absolute top-4 left-4 bg-gray-900/80 backdrop-blur-sm text-white text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-sm">
-                👑 <%= pkg.name %>
+                <%= pkg.name %>
               </span>
             </div>
             
@@ -161,21 +161,28 @@
                       </div>
                     </div>
 
+                    <!-- COMPREHENSIVE BUILT-IN BOOKING ACCORDION FORM -->
                     <div class="space-y-1">
                       <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">Full Name</label>
                       <input type="text" name="guestName" required placeholder="Juana Dela Cruz" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500">
                     </div>
 
-                    <div class="grid grid-cols-2 gap-3">
-                      <div class="space-y-1">
-                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">Email Address</label>
-                        <input type="email" name="guestEmail" required placeholder="juana@example.com" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-rose-500">
+                    <div class="grid grid-cols-3 gap-2"> <!-- Changed to grid-cols-3 to fit the extra field cleanly -->
+                      <div class="space-y-1 col-span-1">
+                        <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">No. of Guests</label>
+                        <input type="number" name="numberOfGuests" required min="1" max="10" value="1" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold focus:outline-none focus:border-rose-500 text-center">
                       </div>
-                      <div class="space-y-1">
+                      <div class="space-y-1 col-span-2">
                         <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">Mobile Phone</label>
-                        <input type="tel" name="guestPhone" required placeholder="09123456789" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-2.5 py-2 text-xs focus:outline-none focus:border-rose-500">
+                        <input type="tel" name="guestPhone" required placeholder="09123456789" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500">
                       </div>
                     </div>
+
+                    <div class="space-y-1">
+                      <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">Email Address</label>
+                      <input type="email" name="guestEmail" required placeholder="juana@example.com" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2 text-xs focus:outline-none focus:border-rose-500">
+                    </div>
+
 
                     <!-- Deactivates block completely if all units under this package tier are full -->
                     <button type="submit" 
