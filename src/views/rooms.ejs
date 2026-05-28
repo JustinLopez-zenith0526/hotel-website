@@ -12,7 +12,7 @@
 
   <!-- Navbar (Matched perfectly with Home Section) -->
   <nav class="bg-white/95 backdrop-blur-md shadow-sm sticky top-0 z-50 border-b border-gray-100">
-    <div class="max-w-[90rem] mx-auto px-6 py-4">
+    <div class="max-w-360 mx-auto px-6 py-4">
       <div class="grid grid-cols-2 md:grid-cols-3 items-center">
         
         <!-- Left Section: Logo -->
@@ -107,7 +107,7 @@
               <!-- DYNAMIC UNIT SELECTION BOOKING FORM ACCORDION -->
               <div class="border-t border-gray-100 pt-4">
                 
-                <!-- UPGRADED: Pass a calculated list of ALL approved bookings for this package -->
+                <!--Pass a calculated list of ALL approved bookings for this package -->
                 <% 
                   let allBlockedRanges = [];
                   pkg.units.forEach(unit => {
@@ -126,27 +126,31 @@
                          data-total-units="<%= pkg.units.length %>">
                   
                   <summary class="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors">
-                    <span class="text-xs font-bold text-gray-800 tracking-wide uppercase">⚡ Reserve Directly Here</span>
+                    <span class="text-xs font-bold text-gray-800 tracking-wide uppercase">Reserve Your Stay Here</span>
                     <span class="transition duration-300 group-open:-rotate-180 text-rose-600 text-xs">▼</span>
                   </summary>
 
                   <!-- The form submission target URL is handled dynamically via Javascript below -->
                   <form method="POST" id="form-<%= pkg.name.replace(/\s+/g, '-') %>" onsubmit="this.action='/rooms/' + this.roomId.value + '/book';" class="p-4 bg-white border-t border-gray-200 space-y-4">
                     
-                    <!-- PRO-GRADE RESET: Stores the permanent unit name securely in data-num -->
+                    <!--  OPTION WRAPPER -->
                     <div class="space-y-1 relative">
                       <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">Select Available Unit</label>
-                      <select name="roomId" required 
-                              class="room-unit-selector w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs font-bold focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
+                      <select name="roomId" required class="room-unit-selector w-full bg-gray-50 border border-gray-200 rounded-xl px-3 py-2.5 text-xs font-bold focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
                         <option value="" disabled selected>-- Choose a room unit --</option>
                         <% let dynamicAvailableCount = 0; %>
                         <% pkg.units.forEach(unit => { dynamicAvailableCount++; %>
-                          <option value="<%= unit.id %>" data-num="<%= unit.roomNumber %>" data-blocked='<%= JSON.stringify(unit.blockedDates) %>'>
-                            <%= unit.roomNumber %> (Available)
+                          
+                          <!--  Pulls the precise database property variable from Step 1 directly with NO fallback constraints -->
+                          <option value="<%= unit.id %>" data-num="<%= unit.roomNumber %>" data-max="<%= unit.maxGuests %>" data-blocked='<%= JSON.stringify(unit.blockedDates || []) %>'>
+                            <%= unit.roomNumber %> (Available) - Max <%= unit.maxGuests %> PAX
                           </option>
+                          
                         <% }); %>
                       </select>
                     </div>
+
+
 
 
 
@@ -170,7 +174,7 @@
                     <div class="grid grid-cols-3 gap-2"> <!-- Changed to grid-cols-3 to fit the extra field cleanly -->
                       <div class="space-y-1 col-span-1">
                         <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">No. of Guests</label>
-                        <input type="number" name="numberOfGuests" required min="1" max="10" value="1" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold focus:outline-none focus:border-rose-500 text-center">
+                        <input type="number" name="numberOfGuests" required min="1" value="1" class="guest-count-input w-full bg-gray-50 border border-gray-200 rounded-xl px-2 py-2 text-xs font-bold focus:outline-none focus:border-rose-500 text-center">
                       </div>
                       <div class="space-y-1 col-span-2">
                         <label class="text-[10px] font-black uppercase tracking-widest text-gray-500">Mobile Phone</label>
@@ -188,7 +192,7 @@
                     <button type="submit" 
                             <%= dynamicAvailableCount === 0 ? 'disabled' : '' %>
                             class="w-full text-center bg-rose-600 hover:bg-rose-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold uppercase tracking-wider text-[11px] py-3 rounded-xl transition-all shadow-md">
-                      <%= dynamicAvailableCount > 0 ? 'Submit Reservation Request' : 'Fully Booked / Unavailable' %>
+                      <%= dynamicAvailableCount > 0 ? ' Reserve ' : 'Fully Booked / Unavailable' %>
                     </button>
                   </form>
                 </details>
@@ -214,7 +218,22 @@
     // Mobile Menu Toggle
     const menuButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
-    
+    const guestInput = form.querySelector('.guest-count-input');
+    const selectedOption = unitSelector.options[unitSelector.selectedIndex];
+
+    if (selectedOption && selectedOption.value && guestInput) {
+        const allowedMaxCapacity = parseInt(selectedOption.dataset.max, 10) || 4;
+        const currentTypedCount = parseInt(guestInput.value, 10) || 1;
+        
+        if (currentTypedCount > allowedMaxCapacity) {
+          // FIXED: Uses dynamic variable text interpolation to show the exact database limit
+          alert("Occupancy threshold exceeded! The selected room tracking unit only features a maximum capacity limit constraint of " + allowedMaxCapacity + " PAX.");
+          guestInput.value = allowedMaxCapacity;
+          return;
+        }
+
+      }
+
     if (menuButton && mobileMenu) {
       menuButton.addEventListener('click', () => {
         mobileMenu.classList.toggle('hidden');
@@ -225,16 +244,11 @@
     }
   </script>
 
-  <!-- REAL-TIME CALENDAR CALCULATION & OVERLAP PROTECTION INTERCEPTOR -->
+    <!-- REAL-TIME CALENDAR CALCULATION & OVERLAP PROTECTION INTERCEPTOR -->
   <script>
-    // Helper function to format Date object into YYYY-MM-DD
-    function formatDateString(date) {
-      return date.toISOString().split('T')[0];
-    }
-
     document.addEventListener('change', function(event) {
       const targetInput = event.target;
-      if (targetInput.name !== 'checkIn' && targetInput.name !== 'checkOut') return;
+      if (targetInput.name !== 'checkIn' && targetInput.name !== 'checkOut' && !targetInput.classList.contains('room-unit-selector') && !targetInput.classList.contains('guest-count-input')) return;
 
       const form = targetInput.closest('form');
       const accordion = targetInput.closest('details');
@@ -243,127 +257,93 @@
       const checkInInput = form.querySelector('input[name="checkIn"]');
       const checkOutInput = form.querySelector('input[name="checkOut"]');
       const unitSelector = form.querySelector('.room-unit-selector');
+      const guestInput = form.querySelector('.guest-count-input');
       const submitBtn = form.querySelector('button[type="submit"]');
 
-      if (!checkInInput || !checkOutInput || !unitSelector) return;
+      if (!checkInInput || !checkOutInput || !unitSelector || !guestInput) return;
 
-      const userIn = checkInInput.value;
-      const userOut = checkOutInput.value;
-
-      // Extract our master package bookings arrays
-      const packageBookings = JSON.parse(accordion.dataset.packageBookings || '[]');
-      const totalUnitsInPackage = parseInt(accordion.dataset.totalUnits || '1', 10);
-
-      // 🛡️ STEP 1: REAL-TIME DATE RANGE VALIDATION
-      if (userIn && userOut) {
-        const userInDate = new Date(userIn);
-        const userOutDate = new Date(userOut);
-
-        if (userOutDate <= userInDate) {
-          alert("Check-Out date must be after your Check-In date!");
-          checkOutInput.value = "";
-          return;
-        }
-
-        // Check how many individual physical room units are completely occupied during this chosen date window
-        let occupiedUnitsCount = 0;
-
-        // Create an array of all dates the user wants to stay
-        let requestedDates = [];
-        let currentDate = new Date(userInDate);
-        while (currentDate < userOutDate) {
-          requestedDates.push(formatDateString(currentDate));
-          currentDate.setDate(currentDate.getDate() + 1);
-        }
-
-        // Loop through all units to see if they are occupied on ANY of the requested dates
-        packageBookings.forEach(unitBooking => {
-          let unitIsOccupied = false;
-          
-          unitBooking.dates.forEach(range => {
-            const bookedIn = new Date(range.start);
-            const bookedOut = new Date(range.end);
-            
-            // Check overlap
-            if (userInDate < bookedOut && userOutDate > bookedIn) {
-              unitIsOccupied = true;
-            }
-          });
-
-          if (unitIsOccupied) {
-            occupiedUnitsCount++;
-          }
-        });
-
-        // If the number of occupied units matches the total rooms available in this tier, block the dates!
-        if (occupiedUnitsCount >= totalUnitsInPackage) {
-          alert(`Sorry! All rooms under this package are fully booked from ${new Date(userIn).toLocaleDateString()} to ${new Date(userOut).toLocaleDateString()}. Please select different dates.`);
-          
-          // Reset fields automatically to force a valid entry selection
-          checkInInput.value = "";
-          checkOutInput.value = "";
-          
-          Array.from(unitSelector.options).forEach(opt => {
-            if (opt.value) {
-              opt.disabled = false;
-              opt.text = (opt.dataset.num || "Room") + " (Available)";
-            }
-          });
-          
-          if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.innerText = "Please Select Dates First";
-          }
+      // 🛡️ SECURITY LAYER 1: STRICT LOCALIZED PASSENGER CAPACITY ENFORCEMENT
+      const selectedOption = unitSelector.options[unitSelector.selectedIndex];
+      if (selectedOption && selectedOption.value) {
+        const allowedMaxCapacity = parseInt(selectedOption.dataset.max, 10);
+        const currentTypedCount = parseInt(guestInput.value, 10) || 1;
+        
+        if (currentTypedCount > allowedMaxCapacity) {
+          alert("⚠️ Occupancy threshold exceeded! This room unit tracking asset only features a maximum capacity limit constraint of " + allowedMaxCapacity + " PAX.");
+          guestInput.value = allowedMaxCapacity;
           return;
         }
       }
 
-      // 🛡️ STEP 2: DROPDOWN UPDATE ENFORCEMENT (If dates pass the master block test)
-      if (userIn && userOut) {
-        const userInDate = new Date(userIn);
-        const userOutDate = new Date(userOut);
-        let totalValidAvailableOptions = 0;
+      const userIn = checkInInput.value;
+      const userOut = checkOutInput.value;
 
-        Array.from(unitSelector.options).forEach(option => {
-          if (!option.value) return;
+      if (!userIn || !userOut) return;
 
-          const cleanNum = option.dataset.num || "Room";
-          const blockedRangesRaw = option.dataset.blocked;
-          if (!blockedRangesRaw) return;
+      // 🛡️ TIMECODE UNIFICATION MATRIX: Normalize date picker values to local midnight milliseconds
+      const userInDate = new Date(userIn + 'T00:00:00').getTime();
+      const userOutDate = new Date(userOut + 'T00:00:00').getTime();
 
-          const blockedRanges = JSON.parse(blockedRangesRaw);
-          let isUnitBooked = false;
+      if (userOutDate <= userInDate) {
+        alert("Check-Out date must be after your Check-In date!");
+        checkOutInput.value = "";
+        return;
+      }
 
-          blockedRanges.forEach(range => {
-            const existingIn = new Date(range.start);
-            const existingOut = new Date(range.end);
+      let totalValidAvailableOptions = 0;
+      const totalUnitsInPackage = parseInt(accordion.dataset.totalUnits || '1', 10);
 
-            if (userInDate < existingOut && userOutDate > existingIn) {
-              isUnitBooked = true;
-            }
-          });
+      // 🛡️ COMBINED SECURITY LAYER 2 & 3: SINGLE PASS VALIDATION MATRIX
+      Array.from(unitSelector.options).forEach(option => {
+        if (!option.value) return; // Skip placeholder text option
 
-          if (isUnitBooked) {
-            option.disabled = true;
-            option.text = `${cleanNum} (Fully Booked)`;
-            if (unitSelector.value === option.value) unitSelector.value = "";
-          } else {
-            option.disabled = false;
-            option.text = `${cleanNum}(Available)`;
-            totalValidAvailableOptions++;
+        const cleanNum = option.dataset.num || "Room";
+        const maxCap = parseInt(option.dataset.max, 10) || 2;
+        const blockedRangesRaw = option.dataset.blocked;
+        if (!blockedRangesRaw) return;
+
+        const blockedRanges = JSON.parse(blockedRangesRaw);
+        let isUnitBooked = false;
+
+        blockedRanges.forEach(range => {
+          // Clean Fix: Extract purely the date string elements to bypass UTC/GMT hour shifts entirely
+          const existingInRaw = range.start.toString().split('T')[0];
+          const existingOutRaw = range.end.toString().split('T')[0];
+
+          const bookedInTime = new Date(existingInRaw + 'T00:00:00').getTime();
+          const bookedOutTime = new Date(existingOutRaw + 'T00:00:00').getTime();
+
+          // Standard SQL Overlap Lock Equation: (StartA < EndB) AND (EndA > StartB)
+          if (userInDate < bookedOutTime && userOutDate > bookedInTime) {
+            isUnitBooked = true;
           }
         });
 
-        if (totalValidAvailableOptions === 0) {
-          if (submitBtn) {
-            submitBtn.disabled = true;
-            submitBtn.innerText = "No Units Available For These Dates";
+        if (isUnitBooked) {
+          option.disabled = true;
+          option.text = cleanNum + " (Fully Booked for These Dates)";
+          
+          // Force choice reset if the user previously selected this now-blocked unit
+          if (unitSelector.value === option.value) {
+            unitSelector.value = "";
           }
         } else {
-          if (submitBtn) {
-            submitBtn.disabled = false;
-            submitBtn.innerText = "Submit Reservation Request";
-          }
+          option.disabled = false;
+          option.text = cleanNum + " (Available) - Max " + maxCap + " PAX";
+          totalValidAvailableOptions++;
+        }
+      });
+
+      // 🛡️ FINAL SUBMIT SHIELD ENFORCEMENT
+      if (totalValidAvailableOptions === 0) {
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.innerText = "No Units Available For These Dates";
+        }
+      } else {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.innerText = "Submit Reservation Request";
         }
       }
     });
@@ -374,6 +354,7 @@
     });
   </script>
 
+  
 
 
 </body>

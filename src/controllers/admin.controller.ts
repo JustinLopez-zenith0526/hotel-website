@@ -17,12 +17,10 @@ export const getAdminDashboard = async (req: Request, res: Response) => {
       orderBy: { createdAt: 'desc' }
     });
 
-    // 📊 PMS ANALYTICS DAEMON ENGINE: Compute live revenue benchmarks on the fly
     let totalGrossRevenue = 0;
     let activeOccupancyCount = 0;
     let housekeepingLoadCount = 0;
 
-    // Calculate money from Approved and Completed stay assets
     dbBookings.forEach((b: any) => {
       if (b.status === "Approved" || b.status === "Completed") {
         totalGrossRevenue += b.totalPrice || 0;
@@ -32,7 +30,6 @@ export const getAdminDashboard = async (req: Request, res: Response) => {
       }
     });
 
-    // Calculate how many physical rooms are currently offline for cleaning
     dbRooms.forEach((r) => {
       if (r.status === "Maintenance") {
         housekeepingLoadCount++;
@@ -42,7 +39,6 @@ export const getAdminDashboard = async (req: Request, res: Response) => {
     res.render('admin', { 
       rooms: dbRooms,
       bookings: dbBookings,
-      // Pass the computed math metrics straight down to the view template
       metrics: {
         revenue: totalGrossRevenue,
         occupancy: activeOccupancyCount,
@@ -55,12 +51,10 @@ export const getAdminDashboard = async (req: Request, res: Response) => {
   }
 };
 
-
-// 2. CREATE: Save new room parameters to Supabase
+// 2. CREATE: Save new room variables to Supabase
 export const createRoomListing = async (req: Request, res: Response) => {
   try {
-    const { name, price, roomType, bedType, viewType, imageUrl, airbnbUrl, status } = req.body;
-    
+    const { name, price, roomType, bedType, viewType, imageUrl, maxGuests, status } = req.body;
     await prisma.room.create({
       data: {
         name,
@@ -69,9 +63,8 @@ export const createRoomListing = async (req: Request, res: Response) => {
         bedType,
         viewType,
         imageUrl,
-        airbnbUrl: airbnbUrl || "https://airbnb.com",
+        maxGuests: parseInt(maxGuests, 10) || 4,
         status: status || "Available"
-        // If you scale room capacities later, parse out: maxGuests: parseInt(maxGuests, 10) || 4
       }
     });
     res.redirect('/admin');
@@ -80,7 +73,6 @@ export const createRoomListing = async (req: Request, res: Response) => {
     res.status(500).send("Database Insertion Mismatch");
   }
 };
-
 
 // 3. UPDATE: Change availability tracking status dropdowns instantly
 export const updateRoomStatus = async (req: Request, res: Response) => {
@@ -105,7 +97,7 @@ export const updateRoomStatus = async (req: Request, res: Response) => {
   }
 };
 
-// 4. DELETE: Clean purge a listing entry row matching the ID parameter
+// 4. DELETE: Clean purge a room listing entry row matching the ID parameter
 export const deleteRoomListing = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
@@ -126,16 +118,19 @@ export const deleteRoomListing = async (req: Request, res: Response) => {
   }
 };
 
+// 5. UPDATE: Full modification path for details forms standalone view page
 export const updateRoomDetails = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const { name, price, roomType, bedType, viewType, imageUrl, airbnbUrl } = req.body;
+    // 1. Add maxGuests to your destructured parameters list from the form body
+    const { name, price, roomType, bedType, viewType, imageUrl, maxGuests } = req.body;
 
     if (!id) {
       res.status(400).send("Missing update row parameter ID.");
       return;
     }
 
+    // 2. Commit the parsed integer straight into your Supabase database table
     await prisma.room.update({
       where: { id: String(id) },
       data: {
@@ -145,16 +140,17 @@ export const updateRoomDetails = async (req: Request, res: Response) => {
         bedType,
         viewType,
         imageUrl,
-        airbnbUrl: airbnbUrl || "https://airbnb.com"
+        maxGuests: parseInt(maxGuests, 10) || 2 // ← UPDATED: Saves the new edited capacity value!
       }
     });
 
     res.redirect('/admin');
   } catch (error) {
-    console.error(error);
+    console.error("Failed to update room details:", error);
     res.status(500).send("Database Update Faulted");
   }
 };
+
 
 // 6. GET: Fetch specific room row details for edit screen interface
 export const getEditPage = async (req: Request, res: Response) => {
@@ -188,13 +184,11 @@ export const updateBookingStatus = async (req: Request, res: Response) => {
       return;
     }
 
-    // 1. Update the booking row first
     const updatedBooking = await (prisma as any).booking.update({
       where: { id: String(id) },
       data: { status }
     });
 
-    // 2. AUTOMATION AUTOMATION: If approved, find the related room unit and mark it "Booked"
     if (status === "Approved" && updatedBooking.roomId) {
       await prisma.room.update({
         where: { id: updatedBooking.roomId },
@@ -209,13 +203,13 @@ export const updateBookingStatus = async (req: Request, res: Response) => {
   }
 };
 
-// 8. UPDATE: Force manual instant check-out for testing/reception desk use
-export const checkoutBookingInstantly = async (req: Request, res: Response) => {
+// 8. UPDATE: Instantly flip a room unit from Maintenance back into Available status
+export const cleanAndReleaseRoomUnit = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
     if (!id) {
-      res.status(400).send("Missing booking tracking parameters ID.");
+      res.status(400).send("Missing targeted room operational key parameters ID.");
       return;
     }
 
@@ -243,8 +237,8 @@ export const checkoutBookingInstantly = async (req: Request, res: Response) => {
 
     res.redirect('/admin');
   } catch (error) {
-    console.error("Instant check-out request failed:", error);
-    res.status(500).send("Check-out Pipeline Operation Faulted");
+    console.error("Housekeeping release pipeline faulted:", error);
+    res.status(500).send("Cleaning Dispatch Operation Faulted");
   }
 };
 
@@ -269,24 +263,39 @@ export const deleteBookingLog = async (req: Request, res: Response) => {
     res.status(500).send("Deletion Operation Faulted");
   }
 };
-// 10. UPDATE: Instantly flip a room unit from Maintenance back into Available status
-export const cleanAndReleaseRoomUnit = async (req: Request, res: Response) => {
+
+// 10. UPDATE: Force manual instant check-out for testing/reception desk use
+export const checkoutBookingInstantly = async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
 
     if (!id) {
-      res.status(400).send("Missing targeted room operational key parameters ID.");
+      res.status(400).send("Missing booking tracking parameters ID.");
       return;
     }
 
-    await prisma.room.update({
+    const booking = await (prisma as any).booking.findUnique({
+      where: { id: String(id) }
+    });
+
+    if (!booking) {
+      res.status(404).send("Target reservation record not found.");
+      return;
+    }
+
+    await (prisma as any).booking.update({
       where: { id: String(id) },
-      data: { status: "Available" } // Re-activates listing on storefront automatically!
+      data: { status: "Completed" }
+    });
+
+    await prisma.room.update({
+      where: { id: booking.roomId },
+      data: { status: "Maintenance" }
     });
 
     res.redirect('/admin');
   } catch (error) {
-    console.error("Housekeeping release pipeline faulted:", error);
-    res.status(500).send("Cleaning Dispatch Operation Faulted");
+    console.error("Instant check-out request failed:", error);
+    res.status(500).send("Check-out Pipeline Operation Faulted");
   }
 };

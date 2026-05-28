@@ -27,17 +27,13 @@ export const getAboutPage = (req: Request, res: Response) => {
 export const getContactPage = (req: Request, res: Response) => {
   res.render('contact', { airbnbUrl: AIRBNB_FALLBACK });
 };
-export const getRoomsPage = async (req: Request, res: Response) => {
+export const getRoomsPage = async (req: any, res: any) => {
   try {
     // 1. Fetch individual physical room units that are NOT in maintenance
-    // Safe object type casting bypasses local compilation schema caching glitches
     const activeUnits = await (prisma as any).room.findMany({
-      where: {
-        status: { not: "Maintenance" } // Hides dirty rooms from public completely
-      },
       include: {
         bookings: {
-          where: { status: "Approved" } // Fetch active approved reservations for date comparison
+          where: { status: "Approved" } 
         }
       },
       orderBy: { price: 'asc' }
@@ -56,20 +52,17 @@ export const getRoomsPage = async (req: Request, res: Response) => {
           bedType: unit.bedType,
           viewType: unit.viewType,
           imageUrl: unit.imageUrl,
-          airbnbUrl: unit.airbnbUrl,
           units: [] 
         });
       }
       
-      // Explicitly define the sub-bookings array safely to avoid 'never' errors on loop paths
       const unitBookings = unit.bookings || [];
       
-      // Map out individual units and pack their approved date arrays to verify live overlaps
       packagesMap.get(key).units.push({
         id: unit.id,
         roomNumber: unit.roomType,
-        status: unit.status,
-        // Pass existing booked calendars down to frontend data attributes for safe checks
+        status: unit.status, // Pass the custom housekeeping status variable cleanly
+        maxGuests: parseInt((unit as any).maxGuests, 10) || 4, 
         blockedDates: unitBookings.map((b: any) => ({
           start: b.checkIn instanceof Date ? b.checkIn.toISOString().split('T')[0] : new Date(b.checkIn).toISOString().split('T')[0],
           end: b.checkOut instanceof Date ? b.checkOut.toISOString().split('T')[0] : new Date(b.checkOut).toISOString().split('T')[0]
@@ -78,8 +71,6 @@ export const getRoomsPage = async (req: Request, res: Response) => {
     });
 
     const packagedRooms = Array.from(packagesMap.values());
-
-    // Check query string parameters to trigger floating success alerts if an inquiry drops cleanly
     const showSuccessAlert = req.query.success === 'true';
 
     res.render('rooms', { 
@@ -92,7 +83,6 @@ export const getRoomsPage = async (req: Request, res: Response) => {
     res.status(500).send("Internal Catalog Engine Error");
   }
 };
-
 
 export const createBookingInquiry = async (req: any, res: any) => {
   try {
