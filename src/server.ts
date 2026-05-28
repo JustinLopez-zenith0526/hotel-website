@@ -17,7 +17,7 @@ const PORT = process.env.PORT || 3000;
 // View Engine Setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(process.cwd(), 'src/views'));
-
+app.set('trust proxy', 1);
 // Session Security Configuration
 app.use(session({
   secret: process.env.SESSION_SECRET || 'fallback-secret',
