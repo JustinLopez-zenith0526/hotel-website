@@ -13,18 +13,19 @@ datasource db {
 
 model Room {
   id          String    @id @default(uuid())
-  name        String    // "Cozy Room", "Deluxe Room", "Executive Suite"
-  price       Float     // 3500, 4500, 9500
-  roomType    String    // "Room 4", "Room 5", "Room 1", "Room 3", "Room 2"
+  name        String    
+  price       Float     
+  roomType    String    
   bedType     String   
   viewType    String   
   imageUrl    String
-  airbnbUrl   String    @default("https://airbnb.com")
-  status      String    @default("Available") // "Available", "Booked", "Maintenance"
+  maxGuests   Int       @default(6) //
+  status      String    @default("Available") 
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
   bookings    Booking[]
 }
+
 
 
 model Booking {

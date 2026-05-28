@@ -83,27 +83,26 @@
           </div>
         </div>
 
-        <div class="space-y-1.5">
-          <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Initial Status Availability</label>
-          <select name="status" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
-            <option value="Available">Available</option>
-            <option value="Booked">Booked (Blocked)</option>
-            <option value="Maintenance">Maintenance</option>
-          </select>
-        </div>
-
-        <div class="space-y-1.5">
-          <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Photo URL</label>
-          <input type="url" name="imageUrl" required placeholder="https://unsplash.com..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
-        </div>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Initial Status Availability</label>
+            <select name="status" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
+              <option value="Available">Available</option>
+              <option value="Booked">Booked (Blocked)</option>
+              <option value="Maintenance">Maintenance</option>
+            </select>
+          </div>
+          
+          <div class="space-y-1.5">
             <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Max Guest Capacity</label>
             <input type="number" name="maxGuests" required min="1" max="20" value="4" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all text-center font-bold">
           </div>
         </div>
 
-        <div class="space-y-1.5">
-          <label class="text-xs font-bold uppercase tracking-wider text-gray-700">Airbnb Redirect URL</label>
-          <input type="url" name="airbnbUrl" placeholder="https://airbnb.com..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
+
+        <div class="space-y-1.5" style="margin-top: 16px; margin-bottom: 16px;">
+          <label class="text-xs font-bold uppercase tracking-wider text-gray-700 block">Photo URL Asset (Supabase Storage Link)</label>
+          <input type="url" name="imageUrl" required placeholder="https://supabase.co..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
         </div>
 
         <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold uppercase tracking-wider text-xs py-4 rounded-xl transition-all shadow-md font-semibold">
@@ -187,161 +186,159 @@
     </section>
   </main>
 
-  </main>
-        <!-- SEPARATED BOOKINGS WRAPPER PANEL -->
-    <div class="lg:col-span-3 space-y-10 mt-6">
-      
-      <!-- TABLE 1: INCOMING RESERVATION REQUESTS (PENDING ONLY) -->
-      <section class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200/60">
-        <div class="mb-6">
-          <h2 class="text-xl font-bold text-gray-900">⏳ Incoming Reservation Requests</h2>
-          <p class="text-xs text-gray-500 mt-0.5">Approve incoming guest submissions to officially lock calendars.</p>
-        </div>
 
-        <div class="overflow-x-auto rounded-xl border border-gray-100">
-          <table class="w-full text-left border-collapse text-sm">
-            <thead>
-              <tr class="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-wider border-b border-gray-100">
-                <th class="p-4">Guest Details</th>
-                <th class="p-4">Unit</th>
-                <th class="p-4">Calendar Dates</th>
-                <th class="p-4">Gross Revenue</th>
-                <th class="p-4">Actions</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50 font-medium text-gray-700">
-              <% let pendingCount = 0; %>
-              <% if (typeof bookings !== 'undefined' && bookings && bookings.length > 0) { %>
-                <% bookings.forEach(booking => { %>
-                  <% if (booking.status === 'Pending') { pendingCount++; %>
-                    <tr class="hover:bg-gray-50/50 transition-colors">
-                      <td class="p-4">
-                        <p class="font-bold text-gray-900"><%= booking.guestName %></p>
-                        <p class="text-xs text-gray-400 font-normal"><%= booking.guestEmail %> • <%= booking.guestPhone %></p>
-                        <p class="text-[11px] text-rose-500 font-semibold mt-1">
-                          Requested: <%= new Date(booking.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
-                        </p>
-                      </td>
-                      <td class="p-4">
-                        <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md text-xs font-semibold"><%= booking.room ? booking.room.roomType : 'Unknown Unit' %></span>
-                      </td>
+  <!-- SEPARATED BOOKINGS WRAPPER PANEL -->
+  <div class="max-w-[95rem] mx-auto px-6 space-y-10 mt-6">
+    
+    <!-- TABLE 1: INCOMING RESERVATION REQUESTS (PENDING ONLY) -->
+    <section class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200/60">
+      <div class="mb-6">
+        <h2 class="text-xl font-bold text-gray-900">⏳ Incoming Reservation Requests</h2>
+        <p class="text-xs text-gray-500 mt-0.5">Approve incoming guest submissions to officially lock calendars.</p>
+      </div>
+
+      <div class="overflow-x-auto rounded-xl border border-gray-100">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-wider border-b border-gray-100">
+              <th class="p-4">Guest Details</th>
+              <th class="p-4">Unit</th>
+              <th class="p-4">Calendar Dates</th>
+              <th class="p-4">Gross Revenue</th>
+              <th class="p-4">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50 font-medium text-gray-700">
+            <% let pCount = 0; %> <!-- Changed variable name token here to pCount to completely avoid collisions -->
+            <% if (typeof bookings !== 'undefined' && bookings && bookings.length > 0) { %>
+              <% bookings.forEach(booking => { %>
+                <% if (booking.status === 'Pending') { pCount++; %>
+                  <tr class="hover:bg-gray-50/50 transition-colors">
+                    <td class="p-4">
+                      <p class="font-bold text-gray-900"><%= booking.guestName %></p>
+                      <p class="text-xs text-gray-400 font-normal"><%= booking.guestEmail %> • <%= booking.guestPhone %></p>
                       
-                      <td class="p-4 text-xs text-gray-600">
-                        <p><strong>In:</strong> <%= new Date(booking.checkIn).toLocaleDateString() %></p>
-                        <p><strong>Out:</strong> <%= new Date(booking.checkOut).toLocaleDateString() %></p>
-                      </td>
-                      <td class="p-4 font-extrabold text-emerald-600">₱<%= booking.totalPrice.toLocaleString() %></td>
-                      <td class="p-4">
-                        <form action="/admin/bookings/<%= booking.id %>/status" method="POST" onchange="this.submit()">
-                          <select name="status" class="text-xs font-bold border rounded-lg px-2.5 py-1.5 border-amber-200 bg-amber-50 text-amber-700 cursor-pointer focus:outline-none">
-                            <option value="Pending" selected>⏳ Pending</option>
-                            <option value="Approved">✅ Approve Stay</option>
-                            <option value="Cancelled">❌ Decline Inquiry</option>
-                          </select>
-                        </form>
-                      </td>
-                    </tr>
-                  <% } %>
-                <% }); %>
-              <% } %>
-              <% if (pendingCount === 0) { %>
-                <tr>
-                  <td colspan="5" class="p-8 text-center text-gray-400 font-normal">No pending reservation requests right now.</td>
-                </tr>
-              <% } %>
-            </tbody>
-          </table>
-        </div>
-      </section>
+                      <div class="mt-1">
+                        <span class="bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded border border-blue-100 text-[10px]">👥 <%= booking.numberOfGuests || 1 %> PAX</span>
+                      </div>
 
-      <!-- TABLE 2: ACTIVE & PAST RESERVATION HISTORIES (APPROVED, COMPLETED, CANCELLED) -->
-      <section class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200/60">
-        <div class="mb-6">
-          <h2 class="text-xl font-bold text-gray-900">📋 Active Stays & Transaction Ledger</h2>
-          <p class="text-xs text-gray-500 mt-0.5">Tracks running hotel occupancy metrics and past historical logs.</p>
-        </div>
-
-        <div class="overflow-x-auto rounded-xl border border-gray-100">
-          <table class="w-full text-left border-collapse text-sm">
-            <thead>
-              <tr class="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-wider border-b border-gray-100">
-                <th class="p-4">Guest Details</th>
-                <th class="p-4">Unit</th>
-                <th class="p-4">Calendar Dates</th>
-                <th class="p-4">Gross Revenue</th>
-                <th class="p-4 text-center">Operational Status / Actions</th>
+                      <p class="text-[11px] text-rose-500 font-semibold mt-1">
+                        📥 Requested: <%= new Date(booking.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                      </p>
+                    </td>
+                    <td class="p-4">
+                      <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md text-xs font-semibold"><%= booking.room ? booking.room.roomType : 'Unknown Unit' %></span>
+                    </td>
+                    <td class="p-4 text-xs text-gray-600">
+                      <p><strong>In:</strong> <%= new Date(booking.checkIn).toLocaleDateString() %></p>
+                      <p><strong>Out:</strong> <%= new Date(booking.checkOut).toLocaleDateString() %></p>
+                    </td>
+                    <td class="p-4 font-extrabold text-emerald-600">₱<%= booking.totalPrice.toLocaleString() %></td>
+                    <td class="p-4">
+                      <form action="/admin/bookings/<%= booking.id %>/status" method="POST" onchange="this.submit()">
+                        <select name="status" class="text-xs font-bold border rounded-lg px-2.5 py-1.5 border-amber-200 bg-amber-50 text-amber-700 cursor-pointer focus:outline-none">
+                          <option value="Pending" selected>⏳ Pending</option>
+                          <option value="Approved">✅ Approve Stay</option>
+                          <option value="Cancelled">❌ Decline Inquiry</option>
+                        </select>
+                      </form>
+                    </td>
+                  </tr>
+                <% } %>
+              <% }); %>
+            <% } %>
+            <% if (pCount === 0) { %>
+              <tr>
+                <td colspan="5" class="p-8 text-center text-gray-400 font-normal">No pending reservation requests right now.</td>
               </tr>
-            </thead>
-            <tbody class="divide-y divide-gray-50 font-medium text-gray-700">
-              <% let historyCount = 0; %>
-              <% if (typeof bookings !== 'undefined' && bookings && bookings.length > 0) { %>
-                <% bookings.forEach(booking => { %>
-                  <% if (booking.status !== 'Pending') { historyCount++; %>
-                    <tr class="hover:bg-gray-50/50 transition-colors">
-                      <td class="p-4">
-                        <p class="font-bold text-gray-900"><%= booking.guestName %></p>
-                        <p class="text-xs text-gray-400 font-normal"><%= booking.guestEmail %> • <%= booking.guestPhone %></p>
-                        
-                        <!-- ADDED: Dynamic Traveler Load Counting Badge -->
-                        <p class="text-[11px] mt-1">
-                          <span class="bg-blue-50 text-blue-700 font-bold px-2 py-0.5 rounded border border-blue-100"><%= booking.numberOfGuests %> PAX</span>
-                        </p>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-                        <p class="text-[11px] text-rose-500 font-semibold mt-1">
-                          Requested: <%= new Date(booking.createdAt).toLocaleDateString() %>
-                        </p>
-                      </td>
+    <!-- TABLE 2: ACTIVE & PAST RESERVATION HISTORIES -->
+    <section class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200/60">
+      <div class="mb-6">
+        <h2 class="text-xl font-bold text-gray-900">📋 Active Stays & Transaction Ledger</h2>
+        <p class="text-xs text-gray-500 mt-0.5">Tracks running hotel occupancy metrics and past historical logs.</p>
+      </div>
 
-                      <td class="p-4">
-                        <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md text-xs font-semibold"><%= booking.room ? booking.room.roomType : 'Unknown Unit' %></span>
-                      </td>
-                      <td class="p-4 text-xs text-gray-600">
-                        <p><strong>In:</strong> <%= new Date(booking.checkIn).toLocaleDateString() %></p>
-                        <p><strong>Out:</strong> <%= new Date(booking.checkOut).toLocaleDateString() %></p>
-                      </td>
-                      <td class="p-4 font-extrabold text-emerald-600">₱<%= booking.totalPrice.toLocaleString() %></td>
-                      <td class="p-4 text-center whitespace-nowrap">
-                        
-                        <% if (booking.status === 'Approved') { %>
-                          <!-- Active stay layout action blocks stay exactly the same... -->
-                          <div class="inline-flex items-center gap-3">
-                            <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg text-xs font-bold">🟢 Active Stay</span>
-                            <form action="/admin/bookings/<%= booking.id %>/checkout" method="POST" onsubmit="return confirm('Process instant check-out for this guest? Room will rotate into Maintenance.')" style="display: inline-block; margin: 0;">
-                              <button type="submit" style="display: inline-flex; align-items: center; justify-content: center; background-color: #374151; border: none; color: #ffffff; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;">⚡ Checkout Now</button>
-                            </form>
-                          </div>
-                        <% } else if (booking.status === 'Completed') { %>
-                          <!-- UPGRADED WITH DELETE PURGE CAPABILITY FOR COMPLETED LOGS -->
-                          <div class="inline-flex items-center gap-4">
-                            <span class="bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-lg text-xs font-bold">🏁 Checked Out</span>
-                            <form action="/admin/bookings/<%= booking.id %>/delete" method="POST" onsubmit="return confirm('Wipe this completed test transaction row forever?')" style="display: inline-block; margin: 0;">
-                              <button type="submit" style="background: none; border: none; color: #9ca3af; font-size: 13px; cursor: pointer;" class="hover:text-red-600 transition-colors">🗑️ Clear</button>
-                            </form>
-                          </div>
-                        <% } else if (booking.status === 'Cancelled') { %>
-                          <!-- UPGRADED WITH DELETE PURGE CAPABILITY FOR CANCELLED LOGS -->
-                          <div class="inline-flex items-center gap-4">
-                            <span class="bg-red-50 text-red-600 border border-red-100 px-3 py-1 rounded-lg text-xs font-bold">❌ Cancelled</span>
-                            <form action="/admin/bookings/<%= booking.id %>/delete" method="POST" onsubmit="return confirm('Permanently remove this cancelled test inquiry log?')" style="display: inline-block; margin: 0;">
-                              <button type="submit" style="background: none; border: none; color: #9ca3af; font-size: 13px; cursor: pointer;" class="hover:text-red-600 transition-colors">🗑️ Clear</button>
-                            </form>
-                          </div>
-                        <% } %>
+      <div class="overflow-x-auto rounded-xl border border-gray-100">
+        <table class="w-full text-left border-collapse text-sm">
+          <thead>
+            <tr class="bg-gray-50 text-gray-500 text-xs font-bold uppercase tracking-wider border-b border-gray-100">
+              <th class="p-4">Guest Details</th>
+              <th class="p-4">Unit</th>
+              <th class="p-4">Calendar Dates</th>
+              <th class="p-4">Gross Revenue</th>
+              <th class="p-4 text-center">Operational Status / Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-50 font-medium text-gray-700">
+            <% let hCount = 0; %> <!-- Changed variable name token here to hCount to completely avoid collisions -->
+            <% if (typeof bookings !== 'undefined' && bookings && bookings.length > 0) { %>
+              <% bookings.forEach(booking => { %>
+                <% if (booking.status !== 'Pending') { hCount++; %>
+                  <tr class="hover:bg-gray-50/50 transition-colors">
+                    <td class="p-4">
+                      <p class="font-bold text-gray-900"><%= booking.guestName %></p>
+                      <p class="text-xs text-gray-400 font-normal"><%= booking.guestEmail %> • <%= booking.guestPhone %></p>
+                      
+                      <div class="mt-1">
+                        <span class="bg-gray-100 text-gray-700 font-bold px-2 py-0.5 rounded border border-gray-200 text-[10px]">👥 <%= booking.numberOfGuests || 1 %> PAX</span>
+                      </div>
 
+                      <p class="text-[11px] text-gray-500 font-semibold mt-1">
+                        Booked On: <%= new Date(booking.createdAt).toLocaleDateString() %>
+                      </p>
+                    </td>
+                    <td class="p-4">
+                      <span class="bg-gray-100 text-gray-800 px-2.5 py-1 rounded-md text-xs font-semibold"><%= booking.room ? booking.room.roomType : 'Unknown Unit' %></span>
+                    </td>
+                    <td class="p-4 text-xs text-gray-600">
+                      <p><strong>In:</strong> <%= new Date(booking.checkIn).toLocaleDateString() %></p>
+                      <p><strong>Out:</strong> <%= new Date(booking.checkOut).toLocaleDateString() %></p>
+                    </td>
+                    <td class="p-4 font-extrabold text-emerald-600">₱<%= booking.totalPrice.toLocaleString() %></td>
+                    <td class="p-4 text-center whitespace-nowrap">
+                      
+                      <% if (booking.status === 'Approved') { %>
+                        <div class="inline-flex items-center gap-3">
+                          <span class="bg-emerald-50 text-emerald-700 border border-emerald-200 px-3 py-1.5 rounded-lg text-xs font-bold">🟢 Active Stay</span>
+                          <form action="/admin/bookings/<%= booking.id %>/checkout" method="POST" onsubmit="return confirm('Process instant check-out for this guest? Room will rotate into Maintenance.')" style="display: inline-block; margin: 0;">
+                            <button type="submit" style="display: inline-flex; align-items: center; justify-content: center; background-color: #374151; border: none; color: #ffffff; padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 700; cursor: pointer;">⚡ Checkout Now</button>
+                          </form>
+                        </div>
+                      <% } else if (booking.status === 'Completed') { %>
+                        <div class="inline-flex items-center gap-4">
+                          <span class="bg-blue-50 text-blue-700 border border-blue-100 px-3 py-1 rounded-lg text-xs font-bold">🏁 Checked Out</span>
+                          <form action="/admin/bookings/<%= booking.id %>/delete" method="POST" onsubmit="return confirm('Wipe this completed transaction forever?')" style="display: inline-block; margin: 0;">
+                            <button type="submit" style="background: none; border: none; color: #9ca3af; font-size: 13px; cursor: pointer;" class="hover:text-red-600 transition-colors">🗑️ Clear</button>
+                          </form>
+                        </div>
+                      <% } else if (booking.status === 'Cancelled') { %>
+                        <div class="inline-flex items-center gap-4">
+                          <span class="bg-red-50 text-red-600 border border-red-100 px-3 py-1 rounded-lg text-xs font-bold">❌ Cancelled</span>
+                          <form action="/admin/bookings/<%= booking.id %>/delete" method="POST" onsubmit="return confirm('Permanently remove this cancelled log?')" style="display: inline-block; margin: 0;">
+                            <button type="submit" style="background: none; border: none; color: #9ca3af; font-size: 13px; cursor: pointer;" class="hover:text-red-600 transition-colors">🗑️ Clear</button>
+                          </form>
+                        </div>
+                      <% } %>
 
-                      </td>
-                    </tr>
-                  <% } %>
-                <% }); %>
-              <% } %>
-              <% if (historyCount === 0) { %>
-                <tr>
-                  <td colspan="5" class="p-8 text-center text-gray-400 font-normal">No past operational histories found.</td>
-                </tr>
-              <% } %>
-            </tbody>
-          </table>
-        </div>
-      </section>
+                    </td>
+                  </tr>
+                <% } %>
+              <% }); %>
+            <% } %>
+            <% if (hCount === 0) { %>
+              <tr>
+                <td colspan="5" class="p-8 text-center text-gray-400 font-normal">No past operational histories found.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </section>
 
-    </div>
+  </div>
