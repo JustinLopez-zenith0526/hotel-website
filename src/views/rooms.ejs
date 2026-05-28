@@ -107,7 +107,7 @@
               <!-- DYNAMIC UNIT SELECTION BOOKING FORM ACCORDION -->
               <div class="border-t border-gray-100 pt-4">
                 
-                <!-- UPGRADED: Pass a calculated list of ALL approved bookings for this package -->
+                <!--Pass a calculated list of ALL approved bookings for this package -->
                 <% 
                   let allBlockedRanges = [];
                   pkg.units.forEach(unit => {
@@ -126,7 +126,7 @@
                          data-total-units="<%= pkg.units.length %>">
                   
                   <summary class="flex items-center justify-between px-4 py-3 cursor-pointer hover:bg-gray-50 transition-colors">
-                    <span class="text-xs font-bold text-gray-800 tracking-wide uppercase">⚡ Reserve Directly Here</span>
+                    <span class="text-xs font-bold text-gray-800 tracking-wide uppercase">Reserve Your Stay Here</span>
                     <span class="transition duration-300 group-open:-rotate-180 text-rose-600 text-xs">▼</span>
                   </summary>
 
@@ -141,7 +141,7 @@
                         <% let dynamicAvailableCount = 0; %>
                         <% pkg.units.forEach(unit => { dynamicAvailableCount++; %>
                           
-                          <!--  FIX: Pulls the precise database property variable from Step 1 directly with NO fallback constraints -->
+                          <!--  Pulls the precise database property variable from Step 1 directly with NO fallback constraints -->
                           <option value="<%= unit.id %>" data-num="<%= unit.roomNumber %>" data-max="<%= unit.maxGuests %>" data-blocked='<%= JSON.stringify(unit.blockedDates || []) %>'>
                             <%= unit.roomNumber %> (Available) - Max <%= unit.maxGuests %> PAX
                           </option>
@@ -192,7 +192,7 @@
                     <button type="submit" 
                             <%= dynamicAvailableCount === 0 ? 'disabled' : '' %>
                             class="w-full text-center bg-rose-600 hover:bg-rose-700 disabled:bg-gray-300 disabled:cursor-not-allowed text-white font-bold uppercase tracking-wider text-[11px] py-3 rounded-xl transition-all shadow-md">
-                      <%= dynamicAvailableCount > 0 ? 'Submit Reservation Request' : 'Fully Booked / Unavailable' %>
+                      <%= dynamicAvailableCount > 0 ? ' Reserve ' : 'Fully Booked / Unavailable' %>
                     </button>
                   </form>
                 </details>
