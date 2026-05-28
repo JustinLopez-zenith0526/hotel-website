@@ -19,11 +19,11 @@
     </a>
   </header>
 
-  <main class="max-w-[95rem] mx-auto px-6 py-12 grid lg:grid-cols-3 gap-10">
+  <main class="max-w-380 mx-auto px-6 py-12 grid lg:grid-cols-3 gap-10">
         <!-- REAL-TIME PMS REVENUE & OPERATIONS COUNTERS ANALYTICS -->
     <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6 mb-4">
       <!-- Card 1: Gross Financial Intake -->
-      <div class="bg-gradient-to-br from-gray-900 to-gray-800 text-white p-6 rounded-2xl shadow-sm border border-gray-800 flex items-center justify-between">
+      <div class="bg-linear-to-br from-gray-900 to-gray-800 text-white p-6 rounded-2xl shadow-sm border border-gray-800 flex items-center justify-between">
         <div>
           <p class="text-xs font-black uppercase tracking-wider text-gray-400">Gross Total Revenue</p>
           <h3 class="text-3xl font-black mt-2 text-emerald-400">₱<%= metrics.revenue.toLocaleString() %></h3>
@@ -105,7 +105,7 @@
           <input type="url" name="imageUrl" required placeholder="https://supabase.co..." class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-rose-500 focus:bg-white transition-all">
         </div>
 
-        <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold uppercase tracking-wider text-xs py-4 rounded-xl transition-all shadow-md font-semibold">
+        <button type="submit" class="w-full bg-rose-600 hover:bg-rose-700 text-white font-bold uppercase tracking-wider text-xs py-4 rounded-xl transition-all shadow-md">
           Save Room to Cloud
         </button>
       </form>
@@ -188,7 +188,7 @@
 
 
   <!-- SEPARATED BOOKINGS WRAPPER PANEL -->
-  <div class="max-w-[95rem] mx-auto px-6 space-y-10 mt-6">
+  <div class="max-w-380 mx-auto px-6 space-y-10 mt-6">
     
     <!-- TABLE 1: INCOMING RESERVATION REQUESTS (PENDING ONLY) -->
     <section class="bg-white p-8 rounded-2xl shadow-sm border border-gray-200/60">
