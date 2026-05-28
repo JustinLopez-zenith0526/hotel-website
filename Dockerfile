@@ -1,26 +1,22 @@
-# Stage 1: Build the TypeScript application matching modern modules
-FROM node:22-alpine AS builder
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npx prisma generate
-RUN npm run build
-
-# Stage 2: Run the production application container
+# Use a secure Node 22 Linux runtime baseline
 FROM node:22-alpine
-WORKDIR /app
-COPY package*.json ./
-RUN npm install --only=production
-COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/prisma ./prisma
-COPY --from=builder /app/src/views ./src/views
-COPY --from=builder /app/src/public ./src/public
 
-# Run Prisma client generation for absolute runtime matching
+WORKDIR /app
+
+# Copy dependency configuration files
+COPY package*.json ./
+
+# Install ALL necessary runtime and TypeScript typing modules
+RUN npm install
+
+# Copy all full-stack project code files straight into the container workspace
+COPY . .
+
+# Generate your live Prisma client schema models matching your database configurations
 RUN npx prisma generate
 
 EXPOSE 3000
 ENV NODE_ENV=production
 
-CMD ["node", "dist/server.js"]
+# Run your server files directly using high-performance tsx runtime execution engines!
+CMD ["npx", "tsx", "src/server.ts"]
